@@ -254,7 +254,7 @@ var roleSelect = function () {
     $("body").on("click", ".select-role-wrap li a", function () {
         var obj = $(this), index = $(this).parents().index();
         $(".select-role img").eq(index).addClass("active").siblings().removeClass("active");
-        $('form').find('input[name="type"]').val(obj.data('type'));
+        $('form').find('input[name="type"]').val(obj.data('type')).trigger('change');
         layer.closeAll();
     })
 

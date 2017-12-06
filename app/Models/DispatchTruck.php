@@ -73,6 +73,27 @@ class DispatchTruck extends Model
             'delivery_man_id');
     }
 
+
+    /**
+     * 车销商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function truckSalesGoods()
+    {
+        return $this->belongsToMany('App\Models\Goods', 'truck_sales_goods', 'dispatch_truck_id')->withPivot(['quantity', 'pieces', 'surplus']);
+    }
+
+    /**
+     * 关联业务员
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function salesman()
+    {
+        return $this->belongsTo(Salesman::class);
+    }
+
     /**
      * 车销单商品
      *

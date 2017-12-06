@@ -166,7 +166,7 @@ class InventoryService extends BaseService
             $info['inventory_type'] = $data['inventory_type'];
             $info['action_type'] = $data['action_type'];
             $info['user_id'] = $data['user_id'] ?? auth()->id();
-            $info['shop_id'] = $data['shop_id'] ?? (auth()->user()->shop_id ?? delivery_auth()->user()->shop->id);
+            $info['shop_id'] = $data['shop_id'] ?? (new UserService())->getCurrentLoggedUser()->shop_id;
             $info['operate'] = array_get($data, 'operate', 'user');
             DB::beginTransaction();
             foreach ($data['goods'] as $goods_id => $value) {

@@ -110,28 +110,7 @@ a {
       @include square(35px);
       line-height: 32px;
       vertical-align: middle;
-      &.role-panel {
-        position: relative;
-        .triangle {
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          @include square(0);
-          border-bottom: 10px solid $gray-lighter;
-          border-left: 10px solid transparent;
-        }
-        .select-role {
-          display: inline-block;
-          @include square(25px);
-          img {
-            width: 100%;
-            display: none;
-            &.active {
-              display: inline-block;
-            }
-          }
-        }
-      }
+
     }
   }
   .submit-panel {
@@ -153,6 +132,20 @@ a {
         float: right;
       }
     }
+    &.bind{
+      a{
+        color:$gray-light;
+        font-size:14px;
+        display: inline-block;
+        width:32%;
+        &.reg{
+          text-align: center;
+        }
+        &.forget-pwd{
+          text-align: right;
+        }
+      }
+    }
   }
 }
 .login-content{
@@ -163,7 +156,32 @@ a {
     }
   }
 }
-
+.role-panel {
+  display: inline-block;
+  @include square(35px);
+  line-height: 32px;
+  vertical-align: middle;
+  position: relative;
+  .triangle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    @include square(0);
+    border-bottom: 10px solid $gray-lighter;
+    border-left: 10px solid transparent;
+  }
+  .select-role {
+    display: inline-block;
+    @include square(25px);
+    img {
+      width: 100%;
+      display: none;
+      &.active {
+        display: inline-block;
+      }
+    }
+  }
+}
 .role-enter input {
   width: 83% !important;
 }
@@ -450,6 +468,9 @@ a {
     }
   }
 }
+.m15 {
+  margin-top: 15px !important;
+}
 .m60 {
   margin-top: 45px !important;
 }
@@ -591,7 +612,11 @@ a {
           text-align: left;
           width: 100%;
         }
+        &.bind-code{
+          width:60%;
+        }
       }
+
       .whole-line-item {
         input {
           width: 100%;
@@ -2471,3 +2496,32 @@ label{
   }
 }
 /*======================================微信列表页 结束======================================*/
+/*======================================绑定账号 账号======================================*/
+.bind-accout-msg{
+  padding:10px 0;
+  img{
+    @include square(50px);
+    border-radius:50%!important;
+    vertical-align:middle;
+  }
+  .msg-txt{
+    width:80%;
+    margin: 4px 0 0 10px;
+    color:$gray-darker;
+  }
+}
+.bind-get-code{
+  height: 30px;
+  line-height: 30px;
+  color: $body-bg;
+  width: 32%;
+  background-color: $theme-orange;
+  border: none;
+  border-radius: 4px !important;
+}
+.right-control{
+  width:80%;
+}
+/*======================================绑定账号 结束======================================*/
+
+

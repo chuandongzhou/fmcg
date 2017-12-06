@@ -608,7 +608,7 @@ if (!function_exists('array_key_value')) {
 if (!function_exists('check_role')) {
     /**
      * 检查角色
-     * 
+     *
      * @param $role /角色
      * @param string $rule /规则
      * @return bool 结果
@@ -640,3 +640,19 @@ if (!function_exists('check_role')) {
     }
 }
 
+
+if (!function_exists('encrypt_socialite')) {
+    /**
+     * 第三方token加密
+     *
+     * @param $token
+     * @return bool|string
+     */
+    function encrypt_socialite($token)
+    {
+        $key = env('APP_KEY');
+        $encryptString = $key . $token . $key;
+
+        return strtoupper(substr(md5($encryptString), 4, 20));
+    }
+}

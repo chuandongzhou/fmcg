@@ -34,14 +34,14 @@
                         <span class="control-label">联系方式</span>
                         <input type="text" class="pull-right" name="contact_info" placeholder="11位数字"/>
                     </div>
-                    <div class="item">
-                        <div class="control-label">营业执照注册号</div>
-                        <div class="whole-line-item">
-                            <input type="text" name="license_num" placeholder="20位数字以内"/>
-                        </div>
-                    </div>
 
-                    @if($user['type'] == cons('user.type.wholesaler'))
+                    @if($user['type'] != cons('user.type.retailer'))
+                        <div class="item">
+                            <div class="control-label">营业执照注册号</div>
+                            <div class="whole-line-item">
+                                <input type="text" name="license_num" placeholder="20位数字以内"/>
+                            </div>
+                        </div>
                         <div class="item">
                             <span class="control-label">营业执照</span>
                             <div class="update-img pull-right image-upload">
@@ -52,20 +52,30 @@
                                 <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>
                             </div>
                         </div>
-                    @endif
+                        <div class="item">
+                            <span class="control-label">食品流通许可证</span>
 
-                    <div class="item">
-                        <span class="control-label">食品流通许可证</span>
-
-                        <div class="update-img pull-right image-upload">
-                            <a href="javascript:;">
-                                <input type="file" data-url="{{ url('api/v1/file/upload-temp') }}" name="file"
-                                       accept="images/*" data-name="business_license">
-                            </a>
-                            <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>
+                            <div class="update-img pull-right image-upload">
+                                <a href="javascript:;">
+                                    <input type="file" data-url="{{ url('api/v1/file/upload-temp') }}" name="file"
+                                           accept="images/*" data-name="business_license">
+                                </a>
+                                <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>
+                            </div>
                         </div>
-                    </div>
-
+                        @if($user['type'] != cons('user.type.supplier'))
+                            <div class="item">
+                                <span class="control-label">代理合同</span>
+                                <div class="update-img pull-right image-upload">
+                                    <a href="javascript:;">
+                                        <input type="file" data-url="{{ url('api/v1/file/upload-temp') }}" name="file"
+                                               accept="images/*" data-name="agency_contract">
+                                    </a>
+                                    <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
                     <div class="item">
                         <span class="control-label">所在地</span>
                         <div class="address pull-right">
@@ -96,18 +106,6 @@
                     非必填项
                 </div>
                 <div class="col-xs-12 enter-panel last-panel">
-                    @if($user['type'] == cons('user.type.retailer'))
-                    <div class="item">
-                        <span class="control-label">营业执照</span>
-                        <div class="update-img pull-right image-upload">
-                            <a href="javascript:;">
-                                <input type="file" data-url="{{ url('api/v1/file/upload-temp') }}" name="file"
-                                       accept="images/*" data-name="license">
-                            </a>
-                            <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>
-                        </div>
-                    </div>
-                    @endif
                     <div class="item">
                         <span class="control-label">推广码</span>
                         <input type="text" name="spreading_code" class="promotion-code pull-right"/>

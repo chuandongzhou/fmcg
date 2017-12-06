@@ -449,7 +449,7 @@ class GoodsService
      */
     static public function getMinPieces($goods)
     {
-        $pieces = $goods->goodsPieces;
+        $pieces = $goods instanceof Goods ? $goods->goodsPieces : $goods;
         return ($pieces->pieces_level_3 || $pieces->pieces_level_3 === 0 ? $pieces->pieces_level_3 : ($pieces->pieces_level_2 || $pieces->pieces_level_2 === 0 ? $pieces->pieces_level_2 : $pieces->pieces_level_1));
     }
 
@@ -481,7 +481,7 @@ class GoodsService
      * 格式化商品数量
      *
      * @param $pieces
-     * @param $goodsPieces
+     * @param $goodsPieces ['pieces' =>'num']
      * @return array
      */
     static function formatGoodsPieces($pieces, $goodsPieces)
@@ -506,6 +506,38 @@ class GoodsService
             $pieces['pieces_level_3'], 0));
 
         return array_filter($newArray);
+    }
+
+    /**
+     * 获取最低数量
+     *
+     * @param $goodsPieces
+     * @param $goodsNum     ['pieces' =>'num']
+     * @return mixed
+     */
+    static function getTheLowLevelNum($goodsPieces, $goodsNum)
+    {
+        $level1 = $goodsPieces['pieces_level_1'];
+        $system1 = $goodsPieces['system_1'];
+        $level2 = $goodsPieces['pieces_level_2'];
+        $system2 = $goodsPieces['system_2'];
+        $level3 = $goodsPieces['pieces_level_3'];
+
+        $step = 1;
+        $nextLevel = $level1;
+        foreach ([$level1, $level2, $level3] as $level) {
+            if (is_null($level) || !isset(${'system' . $step})) {
+                continue;
+            }
+            $system = ${'system' . $step};
+            $nextLevel = ${'level' . ($step + 1)};
+            if ($item = array_get($goodsNum, $level)) {
+                $goodsNum[$nextLevel] = isset($goodsNum[$nextLevel]) ? $goodsNum[$nextLevel] + $system * $item : $system * $item;
+            }
+
+            $step++;
+        }
+        return array_get($goodsNum, $nextLevel, 0);
     }
 
 }

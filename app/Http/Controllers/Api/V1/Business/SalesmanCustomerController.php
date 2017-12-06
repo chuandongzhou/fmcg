@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Business;
 
-use App\Models\BusinessRelationApply;
+use App\Models\AddressData;
 use App\Models\PromoApply;
 use App\Models\SalesmanVisitOrder;
 use App\Models\Salesman;
@@ -13,8 +13,10 @@ use App\Models\SalesmanCustomer;
 use App\Models\User;
 use Carbon\Carbon;
 use Gate;
+use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use ExcelImport;
+use Mockery\Exception;
 
 class SalesmanCustomerController extends Controller
 {
@@ -198,7 +200,7 @@ class SalesmanCustomerController extends Controller
                 return $this->invalidParam('account', $validatedResult);
             }
         }
-        $attributes['shop_id'] = ($validatedResult instanceof User) ? $validatedResult->shop_id  : $customer->shop_id;
+        $attributes['shop_id'] = ($validatedResult instanceof User) ? $validatedResult->shop_id : $customer->shop_id;
         if (($type = array_get($attributes, 'type')) != $customer->type) {
             $customerType = ($validatedResult instanceof User) ? $validatedResult->type : $type;
             if ($customerType != $type) {
@@ -424,6 +426,115 @@ class SalesmanCustomerController extends Controller
         }
 
         return $this->success(['orders' => $this->_queryDispalyFee($request)]);
+    }
+
+    /**
+     * 客户导入
+     *
+     * @param \App\Http\Requests\Api\v1\SalesmanCustomerImportRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function import(Requests\Api\v1\SalesmanCustomerImportRequest $request)
+    {
+        //导入客户
+        $data = $request->all();
+        $salesmanId = array_get($data, 'salesman_id');
+        $user = auth()->user();
+        $salesman = $user->shop->salesmen()->active()->find($salesmanId);
+        if (is_null($salesman)) {
+            return $this->error('业务员不存在!');
+        }
+
+        $userType = $user->type;
+
+        $file = $request->file('file');
+        $result = ExcelImport::fetchContent($file);
+
+        if (!$result) {
+            return $this->error(ExcelImport::getErrorMsg());
+        }
+
+        $addressData = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id', 'area_name']);
+        $results = DB::transaction(function () use ($userType, $result, $salesman, $data, $addressData) {
+            try {
+                $customerAddresses = cons('salesman.customer.address_type');
+                $addressesData = [];
+                $nowTime = Carbon::now();
+                foreach ($result as $item) {
+                    if (($type = (int)$item[5]) >= $userType) {
+                        continue;
+                    }
+                    $customer = $this->_createSalesmanCustomer($salesman, $item, $data, $type);
+                    if ($customer->exists) {
+                        $addressData['address'] = $item[4];
+                        //创建收货地址
+                        $addressesData[] = $this->_buildSalesmanCustomerAddress($customer, $addressData,
+                            $customerAddresses['shipping'], $nowTime);
+                        //创建营业地址
+                        $addressesData[] = $this->_buildSalesmanCustomerAddress($customer, $addressData,
+                            $customerAddresses['business'], $nowTime);
+                    }
+                }
+                DB::table('address_data')->insert($addressesData);
+                return true;
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
+
+        });
+
+        return $results === true ? $this->success('导入客户成功') : $this->error($result);
+    }
+
+    /**
+     * 创建客户
+     *
+     * @param $salesman
+     * @param $item
+     * @param $data
+     * @param $type
+     * @return mixed
+     */
+    private function _createSalesmanCustomer($salesman, $item, $data, $type)
+    {
+        $customerData = [
+            'number' => $this->_getCustomerNumber($salesman),
+            'belongs_shop' => $salesman->shop_id,
+            'name' => $item[0],
+            'letter' => $this->_getLetter($item[0]),
+            'contact' => $item[1],
+            'contact_information' => $item[2],
+            'business_area' => $item[3],
+            'business_address_lng' => $data['x_lng'],
+            'business_address_lat' => $data['y_lat'],
+            'shipping_address_lng' => $data['x_lng'],
+            'shipping_address_lat' => $data['y_lat'],
+            'type' => $type
+        ];
+        if ($type == cons('user.type.retailer')) {
+            $customerData['store_type'] = (int)$item[6];
+        }
+        $customer = $salesman->customers()->create($customerData);
+        return $customer;
+    }
+
+    /**
+     *
+     * 创建客户地址
+     *
+     * @param $customer
+     * @param $addressData
+     * @param $type
+     * @return mixed
+     */
+    private function _buildSalesmanCustomerAddress($customer, $addressData, $type, $nowTime)
+    {
+        $addressData['type'] = $type;
+        $addressData['addressable_type'] = 'App\Models\SalesmanCustomer';
+        $addressData['addressable_id'] = $customer->id;
+        $addressData['created_at'] = $nowTime;
+        $addressData['updated_at'] = $nowTime;
+        return $addressData;
     }
 
 

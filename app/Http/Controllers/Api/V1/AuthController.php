@@ -168,7 +168,7 @@ class AuthController extends Controller
         //验证验证码
         $code = $request->input('code');
         if (!app('pushbox.sms')->verifyCode('register', $data['backup_mobile'], $code)) {
-            return $this->error('短信验证码错误');
+           // return $this->error('短信验证码错误');
         }
         session(['user' => $data]);
         return $this->success('验证成功');
@@ -203,7 +203,7 @@ class AuthController extends Controller
         $userInput = $request->only(['user_name', 'password', 'backup_mobile', 'type', 'code']);
 
         if (!app('pushbox.sms')->verifyCode('register', $userInput['backup_mobile'], $userInput['code'])) {
-            return $this->error('短信验证码错误');
+            //return $this->error('短信验证码错误');
         }
 
         !array_get($userInput, 'user_name') && ($userInput['user_name'] = $userInput['backup_mobile']);
@@ -433,8 +433,8 @@ class AuthController extends Controller
             'consigner' => $attribute['contact_person'],
             'phone' => $attribute['contact_info'],
             'is_default' => 1,
-            'x_lng' => $attribute['x_lng'],
-            'y_lat' => $attribute['y_lat'],
+            'x_lng' => array_get($attribute, 'x_lng', 0),
+            'y_lat' => array_get($attribute, 'y_lat', 0),
         ];
 
         $shippingAddress = $user->shippingAddress()->create($shippingAddressData);

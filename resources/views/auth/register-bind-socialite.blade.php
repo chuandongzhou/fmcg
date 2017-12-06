@@ -1,5 +1,5 @@
 @extends('auth.master')
-@include('includes.cropper')
+@include('includes.uploader')
 @include('includes.address', ['model' => 'shop'])
 @include('includes.backup-password')
 
@@ -43,7 +43,7 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group visible-item visible-item-2 visible-item-3 visible-item-4">
                                     <label class="col-xs-3 control-label" for="license_num"><span class="red">*</span>
                                         <span class="prompt">营业执照注册号:</span></label>
 
@@ -52,7 +52,7 @@
                                                placeholder="请输入执照注册号" type="text">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group visible-item visible-item-2 visible-item-3 visible-item-4">
                                     <label class="col-sm-3 control-label" for="license"><span class="red">*</span> 营业执照:</label>
 
                                     <div class="col-sm-9 col-md-6">
@@ -73,8 +73,7 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="form-group">
+                                <div class="form-group visible-item visible-item-2 visible-item-3 visible-item-4">
                                     <label class="col-sm-3 control-label" for="business_license"><span
                                                 class="red">*</span> 食品流通许可证:</label>
 
@@ -97,8 +96,7 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="form-group hidden">
+                                <div class="form-group visible-item visible-item-3">
                                     <label class="col-sm-3 control-label" for="username"><span class="red">*</span>
                                         代理合同:</label>
 
@@ -129,7 +127,7 @@
                                                 class="address-province form-control address">
                                         </select>
                                     </div>
-                                    <div class="col-xs-4 ">
+                                    <div class="col-xs-4">
                                         <select data-group="shop" name="address[city_id]"
                                                 class="address-city form-control address">
                                         </select>
@@ -168,7 +166,7 @@
                                                 class="red">*</span> <span class="prompt">用户类型:</span>:</label>
 
                                     <div class="col-sm-9 col-md-6">
-                                        <select name="type" class="form-control" id="type">
+                                        <select name="type" class="form-control visible-select" id="type">
                                             @foreach(cons('user.type') as $val)
                                                 <option value="{{ $val }}">{{ cons()->valueLang('user.type' , $val) }}</option>
                                             @endforeach
@@ -325,9 +323,9 @@
                     self.addClass("active").siblings().removeClass("active");
                     $(".bindwx-register.on").removeClass("on").siblings().addClass("on");
                 } else {
-
                 }
             })
+            visibleSelect();
 
             getShopAddressMap(0, 0);
             picFunc();
@@ -342,22 +340,6 @@
                     streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
                 $('input[name="address[area_name]"]').val(provinceVal + cityVal + districtVal + streetVal);
             })
-
-            var type = $('input[name="type"]').val(),
-                wholesalerType = '{{ cons('user.type.wholesaler') }}',
-                agencyContract = $('span[name="agency_contract"]'),
-                addAddress = $('#add-address');
-            if (type < wholesalerType) {
-                addAddress.prop('disabled', true).closest('.form-group').addClass('hidden').find('.address-list').html('');
-                agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
-            } else {
-                if (type == wholesalerType) {
-                    agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
-                } else {
-                    agencyContract.closest('.form-group').removeClass('hidden').find('input[type="file"]').prop('disabled', false);
-                }
-                addAddress.prop('disabled', false).closest('.form-group').removeClass('hidden');
-            }
 
             //短信发送成功倒计时
             $('.send-sms').on('done.hct.ajax', function (data, textStatus) {

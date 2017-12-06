@@ -228,8 +228,6 @@ class SalesmanController extends Controller
 
         $goodsSalesNum = $this->_formatGoods($orderGoods, $goodsTarget->pluck('bar_code', 'id')->toArray());
 
-        //dd($goodsSalesNum);
-
         $goodsPieces = array_key_to_value(GoodsPieces::whereIn('goods_id', $goodsId)->get()->toArray(), 'goods_id');
 
 

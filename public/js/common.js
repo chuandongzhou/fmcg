@@ -1345,7 +1345,7 @@ var visibleSelect = function () {
         $(visibleItemSelector).each(function () {
             $(this).removeClass('hidden').find('input , select').prop('disabled', false);
         })
-    })
+    }).trigger('change');
 }
 
 /**

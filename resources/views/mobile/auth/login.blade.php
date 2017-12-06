@@ -37,7 +37,8 @@
                     <button type="submit" class="btn btn-primary submit">登录</button>
                 </div>
             </form>
-            <div class="col-xs-12 footer-wrap">
+            <div class="col-xs-12 footer-wrap bind">
+                <a class="weixin-login" href="{{ url('weixin-auth/login') }}">微信登录</a>
                 <a class="reg" href="{{ url('auth/register-account') }}">注册</a>
                 <a class="forget-pwd" href="{{ url('auth/forget-password') }}">忘记密码</a>
             </div>

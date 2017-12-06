@@ -130,35 +130,6 @@ body,
   vertical-align: middle;
 }
 
-.enter-wrap .enter-item .icon-panel.role-panel {
-  position: relative;
-}
-
-.enter-wrap .enter-item .icon-panel.role-panel .triangle {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 0;
-  height: 0;
-  border-bottom: 10px solid #b4b4b4;
-  border-left: 10px solid transparent;
-}
-
-.enter-wrap .enter-item .icon-panel.role-panel .select-role {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-}
-
-.enter-wrap .enter-item .icon-panel.role-panel .select-role img {
-  width: 100%;
-  display: none;
-}
-
-.enter-wrap .enter-item .icon-panel.role-panel .select-role img.active {
-  display: inline-block;
-}
-
 .enter-wrap .submit-panel {
   margin-top: 25px;
 }
@@ -183,9 +154,58 @@ body,
   float: right;
 }
 
+.enter-wrap .footer-wrap.bind a {
+  color: #777777;
+  font-size: 14px;
+  display: inline-block;
+  width: 32%;
+}
+
+.enter-wrap .footer-wrap.bind a.reg {
+  text-align: center;
+}
+
+.enter-wrap .footer-wrap.bind a.forget-pwd {
+  text-align: right;
+}
+
 .login-content .enter-item input {
   width: 85%;
   font-size: 1.3rem;
+}
+
+.role-panel {
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  line-height: 32px;
+  vertical-align: middle;
+  position: relative;
+}
+
+.role-panel .triangle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 10px solid #b4b4b4;
+  border-left: 10px solid transparent;
+}
+
+.role-panel .select-role {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+}
+
+.role-panel .select-role img {
+  width: 100%;
+  display: none;
+}
+
+.role-panel .select-role img.active {
+  display: inline-block;
 }
 
 .role-enter input {
@@ -528,6 +548,10 @@ body,
   padding-left: 10px;
 }
 
+.m15 {
+  margin-top: 15px !important;
+}
+
 .m60 {
   margin-top: 45px !important;
 }
@@ -715,6 +739,11 @@ body,
 .reg-container .edit-wrap .item input[type='password'].text-left {
   text-align: left;
   width: 100%;
+}
+
+.reg-container .edit-wrap .item input[type='text'].bind-code,
+.reg-container .edit-wrap .item input[type='password'].bind-code {
+  width: 60%;
 }
 
 .reg-container .edit-wrap .item .whole-line-item input {
@@ -3127,3 +3156,38 @@ label {
 }
 
 /*======================================微信列表页 结束======================================*/
+
+/*======================================绑定账号 账号======================================*/
+
+.bind-accout-msg {
+  padding: 10px 0;
+}
+
+.bind-accout-msg img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50% !important;
+  vertical-align: middle;
+}
+
+.bind-accout-msg .msg-txt {
+  width: 80%;
+  margin: 4px 0 0 10px;
+  color: #222222;
+}
+
+.bind-get-code {
+  height: 30px;
+  line-height: 30px;
+  color: #fff;
+  width: 32%;
+  background-color: #F25000;
+  border: none;
+  border-radius: 4px !important;
+}
+
+.right-control {
+  width: 80%;
+}
+
+/*======================================绑定账号 结束======================================*/

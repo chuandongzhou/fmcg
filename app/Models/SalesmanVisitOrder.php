@@ -370,7 +370,7 @@ class SalesmanVisitOrder extends Model
         if (is_null($salesmanCustomer)) {
             return '';
         }
-        return $salesmanCustomer->businessAddress;
+        return $salesmanCustomer->business_address_name;
     }
 
     /**

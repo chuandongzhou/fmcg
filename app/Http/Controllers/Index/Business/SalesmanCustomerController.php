@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Index\Business;
 
 use App\Models\Goods;
-use App\Models\Order;
 use App\Models\SalesmanCustomer;
 use App\Models\SalesmanVisitOrder;
 use App\Services\BillService;
@@ -12,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Index\Controller;
 use Gate;
+use Response;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\CellWriter;
@@ -73,6 +73,7 @@ class SalesmanCustomerController extends Controller
             ->paginate();
         return view('index.business.salesman-customer-index',
             [
+                'user' => $user,
                 'salesmen' => $salesmen,
                 'customers' => $customers,
                 'type' => $type,
@@ -101,15 +102,32 @@ class SalesmanCustomerController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating some new resource.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function store(Request $request)
+    public function batchCreate()
     {
+        $salesmen = $this->shop->salesmen()->lists('name', 'id');
+        return view('index.business.salesman-customer-batch-create', compact('salesmen'));
+    }
 
-        //
+    /**
+     * 客户资料导入模版
+     *
+     * @return \Illuminate\Http\RedirectResponse|\WeiHeng\Responses\IndexResponse
+     */
+    public function downloadTemplate()
+    {
+        $userType = auth()->user() ? auth()->user()->type : cons('user.type.wholesaler');
+        $fileName = array_search($userType, cons('user.type'));
+        $fileName = 'salesman_customer_rule_' . $fileName;
+
+        $file = public_path('images\\') . $fileName . '.xls';
+        if (is_file($file)) {
+            return Response::download($file);
+        }
+        return $this->error('文件不存在');
     }
 
     /**
@@ -300,8 +318,8 @@ class SalesmanCustomerController extends Controller
             $order = $item->order;
             if (!is_null($order)) {
                 return $order->is_cancel == 0
-                && $order->pay_status < cons('order.pay_status.payment_failed')
-                && $order->status != cons('order.status.invalid');
+                    && $order->pay_status < cons('order.pay_status.payment_failed')
+                    && $order->status != cons('order.status.invalid');
             }
             return true;
         });

@@ -188,8 +188,7 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function goodsTarget()
     {
-        return $this->belongsToMany('App\Models\Goods', 'salesman_goods_target')->withPivot('id', 'num', 'pieces',
-            'barcode', 'month');
+        return $this->belongsToMany('App\Models\Goods', 'salesman_goods_target')->withPivot('id', 'num', 'pieces','barcode', 'month');
     }
 
     /**

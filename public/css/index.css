@@ -1112,7 +1112,7 @@ a:hover {
 }
 
 .register.bindwx-register .forget-pwd {
-  color: #777777;
+  color: #555555;
 }
 
 /*======================================register end======================================*/
@@ -8500,6 +8500,10 @@ table tr:hover .warning-edit-icon {
   background-image: url("../images/buy-role-icon.png");
 }
 
+.app-download .download-role-item .down-panel .icon-role-down.cg {
+  background-image: url("../images/cg-role-icon.png");
+}
+
 .app-download .download-role-item .down-panel .title {
   color: #555555;
   font-size: 38px;
@@ -8520,6 +8524,10 @@ table tr:hover .warning-edit-icon {
 
 .app-download .download-role-item .down-panel .dbd-buy-code {
   background-image: url("../images/qr-code-buy.png");
+}
+
+.app-download .download-role-item .down-panel .cg-qr-code {
+  background-image: url("../images/qr-code-cg.png");
 }
 
 .app-download .download-role-item .down-panel .qr-code {

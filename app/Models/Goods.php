@@ -626,7 +626,7 @@ class Goods extends Model
      */
     public function getMaxNumAttribute()
     {
-        $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
+        $userType = auth()->check() ? auth()->user()->type : cons('user.type.retailer');
 
         $maxNum = $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->max_num_wholesaler : $this->max_num_retailer;
 
