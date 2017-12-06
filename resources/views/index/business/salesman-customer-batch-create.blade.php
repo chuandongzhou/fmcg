@@ -17,7 +17,7 @@
                 <form class="form-horizontal ajax-form" method="post" action="" autocomplete="off">
                     <div class="col-sm-12 editor-panel content-wrap">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">业务员:</label>
+                            <label class="col-sm-2 control-label"><span class="red">*</span> 业务员:</label>
 
                             <div class="col-xs-3">
                                 <select name="salesman_id" class="form-control">

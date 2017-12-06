@@ -48,8 +48,10 @@
                                value="{{ isset($data['name'])?$data['name']:'' }}"
                                placeholder="{{empty($data['type']) ? '客户' : '供应商'}}名称">
                         <button type="submit" class="btn btn-blue-lighter search-by-get">查询</button>
-                        <a href="{{ url('business/salesman-customer/batch-create') }}"
-                           class="btn btn-blue-lighter">批量导入</a>
+                        @if($user->type != cons('user.type.maker'))
+                            <a href="{{ url('business/salesman-customer/batch-create') }}"
+                               class="btn btn-blue-lighter">批量导入</a>
+                        @endif
                         <a class="btn btn-border-blue customer-map" href="javascript:"
                            data-target="#customerAddressMapModal"
                            data-toggle="modal">

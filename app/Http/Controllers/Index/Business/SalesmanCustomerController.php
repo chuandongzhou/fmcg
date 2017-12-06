@@ -73,6 +73,7 @@ class SalesmanCustomerController extends Controller
             ->paginate();
         return view('index.business.salesman-customer-index',
             [
+                'user' => $user,
                 'salesmen' => $salesmen,
                 'customers' => $customers,
                 'type' => $type,
@@ -118,7 +119,10 @@ class SalesmanCustomerController extends Controller
      */
     public function downloadTemplate()
     {
-        $fileName = 'salesman_customer_rule';
+        $userType = auth()->user() ? auth()->user()->type : cons('user.type.wholesaler');
+        $fileName = array_search($userType, cons('user.type'));
+        $fileName = 'salesman_customer_rule_' . $fileName;
+
         $file = public_path('images\\') . $fileName . '.xls';
         if (is_file($file)) {
             return Response::download($file);
