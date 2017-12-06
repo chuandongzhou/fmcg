@@ -121,6 +121,7 @@ return [
         'type' => [
             'platform' => 0,            //平台
             'business' => 1,            //业务
+            'dispatch_truck' => 2,            //车销
         ],
         'is_cancel' => [ //订单是否被取消，默认是未取消
             'off' => 0,
@@ -403,7 +404,8 @@ return [
         'android' => 2,
         'delivery' => 3,
         'business' => 4,
-        'android_buyer' => 5
+        'android_buyer' => 5,
+        'warehousekeeper' => 6
     ],
     //android推送通知类型
     'push_type' => [

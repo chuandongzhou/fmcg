@@ -962,7 +962,7 @@ a {
       display: block;
     }
     .forget-pwd{
-      color:$gray-light;
+      color:$gray;
     }
   }
 }
@@ -7341,6 +7341,9 @@ table tr:hover .warning-edit-icon {
         &.dbd-buy{
           background-image: url("../images/buy-role-icon.png");
         }
+        &.cg{
+          background-image: url("../images/cg-role-icon.png");
+        }
       }
       .title{
         color:$gray;
@@ -7358,6 +7361,9 @@ table tr:hover .warning-edit-icon {
       }
       .dbd-buy-code {
         background-image: url("../images/qr-code-buy.png");
+      }
+      .cg-qr-code {
+        background-image: url("../images/qr-code-cg.png");
       }
       .qr-code {
         background-size: cover;

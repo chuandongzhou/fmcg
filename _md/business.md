@@ -1031,3 +1031,112 @@
 
     pay_status             tinyint              订单支付状态（0=>未支付， 1=> 支付成功）
 
+### 2.12 车销单  dispatch-truck
+
+#### 2.12.1 获取所有车销单[get](/)
+
+`请求参数：`
+
+`成功返回：`
+
+    dispatchTrucks          array               车销单列表
+
+    dispatchTrucks  字段子集介绍
+
+        id                      int                 车销单号
+        status                  int                 状态
+        dispatch_time           timestamp           发车时间
+        truck                   array               车辆信息
+
+        truck 字段子集介绍
+
+                name                string                  车名
+                license_plate       string                  车牌号
+
+#### 2.12.2 获取车销单详情[get](/{truck_id})
+
+`请求参数：`
+
+`成功返回：`
+
+    id                      int                 车销单号
+    status                  int                 状态
+    dispatch_time           timestamp           发车时间
+    back_time               timestamp           回车时间
+    delivery_mans           array               配送员列表
+    salesman                array               业务员详情
+    orders                  array               订单列表
+    truckSoldGoods          array               订单商品总计
+    dispatchTruckSurplus    array               剩余商品总计
+
+    delivery_mans子集介绍
+
+        name                string              配送员名称
+        phone               string              配送员联系电话
+
+    salesman    子集介绍
+
+        name                string              业务员名称
+        contact_info        string              业务员联系方式
+
+    orders 子集介绍
+
+        id                              int                 订单号
+        user_shipping_address_name      string              订单收货地址
+
+    truckSoldGoods  子集介绍
+
+        id                  int                 商品id
+        name                string              商品名
+        image_url           string              商品图片
+        order_count         int                 几个订单中含有
+        num                 string              总销售量字符串
+
+     dispatchTruckSurplus   子集介绍
+
+        id                  int                 商品id
+        name                string              商品名
+        image_url           string              商品图片
+        surplus             string              车上剩余商品数量字符串
+
+#### 2.12.3 获取车销单上的商品[get](/{truck_id}/goods)
+
+`请求参数：`
+
+`成功返回：`
+        id                          int             商品id
+        image_url                   string          商品图片
+        name                        string          商品名
+        surplus                     string          商品剩余
+        price_retailer              decimal         终端商价格
+        price_wholesaler            decimal         批发商价格
+        pieces_retailer             int             终端商单位
+        pieces_wholesaler           int             批发商单位
+
+#### 2.12.4 新增车销订单[post](/{truck_id})
+
+`请求参数：`
+        salesman_customer_id                int             客户id
+        order_remark                        string          订单备注
+        x_lng                               float           经度
+        y_lat                               float           纬度
+        address                             string          地址
+        photo                               file            照片
+        goods                               array           商品列表
+        gifts                               array           赠品
+
+        goods字符子集介绍
+
+            id                      int                 商品id
+            price                   decimal             商品价格
+            num                     int                 商品数量
+            pieces                  int                 商品单位
+
+        gifts字符子集介绍
+
+             id                      int                 商品id
+             num                     int                 商品数量
+             pieces                  int                 商品单位
+
+`成功返回：`
+

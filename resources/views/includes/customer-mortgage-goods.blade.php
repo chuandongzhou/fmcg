@@ -45,8 +45,6 @@
     @parent
     <script type="text/javascript">
         $(function () {
-
-
             var mortgageGoodsModal = $('#mortgageGoodsModal'),
                     mortgageGoodsList =$('.mortgage-goods-list'),
                     addBtn = $('.add-btn');

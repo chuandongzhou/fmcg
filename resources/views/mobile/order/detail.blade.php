@@ -136,7 +136,7 @@
                     <li class="clearfix">
                         <span class="pull-left prompt">送货人</span>
                         <span class="pull-right">
-                            @foreach($order->deliveryMan as $deliveryMan)
+                            @foreach($order->deliveryMans as $deliveryMan)
                                 <span class="delivery-person">{{ $deliveryMan->name }}-{{ $deliveryMan->phone }}</span>
                             @endforeach
                         </span>

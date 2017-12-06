@@ -639,8 +639,9 @@ class Order extends Model
      */
     public function getUserShippingAddressNameAttribute()
     {
+
         if ($this->user_id > 0) {
-            return $this->shippingAddress->address ?? (new AddressData());
+            return isset($order->shippingAddress->address) ? $this->shippingAddress->address->address_name : '';
         } elseif ($this->salesmanVisitOrder) {
             return $this->salesmanVisitOrder->business_address;
         }

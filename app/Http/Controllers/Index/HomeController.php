@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\AddressData;
 use App\Models\Advert;
+use App\Models\DispatchTruck;
 use App\Models\Goods;
 use App\Models\Order;
 use App\Models\Shop;
@@ -23,7 +24,8 @@ class HomeController extends Controller
     {
         $addressData = (new AddressService())->getAddressData();
         $data = array_except($addressData, 'address_name');
-        $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->ofAddress($data, true)->get();
+        $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->ofAddress($data,
+            true)->get();
         return view('index.index.index', [
             'goodsColumns' => GoodsService::getNewGoodsColumn(),
             'adverts' => $adverts,
@@ -52,6 +54,13 @@ class HomeController extends Controller
 
     public function test(Request $request)
     {
+        $dispatch = DispatchTruck::with('truckSalesGoods')->find(236);
+        $goods = $dispatch->truckSalesGoods;
+
+        $pivot = $goods->first()->pivot;
+        $pivot->update(['surplus' => $pivot->surplus - 3]);
+
+        dd($pivot);
 
         dd($request->server());
 

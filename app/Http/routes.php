@@ -29,6 +29,15 @@ $router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile'], function ($r
         $router->get('logout', 'AuthController@logout');
         $router->get('forget-password', 'AuthController@forgetPassword');
     });
+    /**
+     * 微信
+     */
+    $router->group(['prefix' => 'weixin-auth'], function ($router) {
+        $router->get('login', 'WeixinAuthController@login');
+        $router->any('callback', 'WeixinAuthController@callback');
+        $router->get('bind-socialite', 'WeixinAuthController@bindSocialite');
+        $router->get('reg-socialite', 'WeixinAuthController@regSocialite');
+    });
     $router->get('weixin-article/articles', 'WeixinArticleController@articles');
     $router->get('weixin-article', 'WeixinArticleController@index');
 });
@@ -104,15 +113,6 @@ $router->group(['namespace' => 'Auth'], function ($router) {
         $router->get('bind-socialite', 'WeixinWebAuthController@bindSocialite');
     });
 
-    /**
-     * 微信
-     */
-    $router->group(['prefix' => 'weixin-auth'], function ($router) {
-        $router->get('login', 'WeixinAuthController@login');
-        $router->any('callback', 'WeixinAuthController@callback');
-        $router->get('bind-socialite', 'WeixinAuthController@bindSocialite');
-    });
-
 });
 
 /**
@@ -186,9 +186,11 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('salesman/target', 'SalesmanController@target');
         $router->get('salesman/target-set', 'SalesmanController@targetSet');
         $router->resource('salesman', 'SalesmanController');
-        $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
+        $router->get('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
         $router->get('salesman-customer/{salesman_customer}/stock', 'SalesmanCustomerController@getStockQuery');
         $router->get('salesman-customer/{salesman_customer}/bill', 'SalesmanCustomerController@bill');
+        $router->get('salesman-customer/batch-create', 'SalesmanCustomerController@batchCreate');
+        $router->get('salesman-customer/download-template', 'SalesmanCustomerController@downloadTemplate');
         $router->resource('salesman-customer', 'SalesmanCustomerController');
         $router->get('report/{salesman_id}/export', 'ReportController@export');
         $router->get('report/{salesman_id}/customer-detail', 'ReportController@customerDetail');
@@ -599,6 +601,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->get('purchased-goods', 'SalesmanCustomerController@purchasedGoods');//客户曾购买商品
                     $router->post('apply-bind-relation', 'SalesmanCustomerController@bindRelation');//客户申请绑定业务关系
                     $router->get('passed-promo', 'SalesmanCustomerController@getPassedPromos');//获取已通过活动
+                    $router->post('import', 'SalesmanCUstomerController@import'); //客户批量导入
                 });
 
                 $router->resource('salesman-customer', 'SalesmanCustomerController');
@@ -666,6 +669,17 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 });
                 $router->group(['prefix' => 'trade-request'], function ($router) {
                     $router->post('pass', 'TradeRequestController@pass'); //通过
+                });
+
+                //车销单
+                $router->group(['prefix' => 'dispatch-truck'], function ($router) {
+                    $router->get('/', 'DispatchTruckController@index');
+                    $router->get('{truck_id}/goods', 'DispatchTruckController@dispatchGoods')->where('truck_id',
+                        '[0-9]+');;
+                    $router->get('{truck_id}', 'DispatchTruckController@detail')->where('truck_id', '[0-9]+');;
+                    $router->post('{truck_id}', 'DispatchTruckController@store')->where('truck_id', '[0-9]+');;
+
+
                 });
 
             });

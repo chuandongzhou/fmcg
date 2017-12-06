@@ -60,7 +60,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-2 control-label" for="type">客户类型:</label>
                                     <div class="col-sm-10 col-md-6">
-                                        <select class="form-control" id="type" name="type">
+                                        <select class="form-control visible-select" id="type" name="type">
                                             <option value="">请选择客户类型</option>
                                             @foreach(cons()->valueLang('user.type') as $type=>$name)
                                                 @if($type < $userType && $type != cons('user.type.supplier'))
@@ -91,7 +91,7 @@
                         @endif
                         @if(!$customerType)
                             <div id="store_type"
-                                 class="form-group row @if($salesmanCustomer && $salesmanCustomer->type > cons('user.type.retailer')) hidden @endif">
+                                 class="form-group row visible-item-1 visible-item @if($salesmanCustomer && $salesmanCustomer->type > cons('user.type.retailer')) hidden @endif">
                                 <label class="col-sm-2 control-label" for="salesman_id"><span
                                             class="red">*</span>店铺类型:</label>
 
@@ -348,9 +348,6 @@
             var baiduMap = initMap();
             addressSelectChange(true, baiduMap);
             visibleSelect();
-            $('#type').change(function () {
-                $(this).find('option:selected').val() == "{{cons('user.type.retailer')}}" ? $('#store_type').removeClass('hidden') : $('#store_type').addClass('hidden')
-            })
         });
     </script>
 @stop

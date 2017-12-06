@@ -1,5 +1,5 @@
 @extends('auth.master')
-@include('includes.cropper')
+@include('includes.uploader')
 @include('includes.address', ['model' => 'shop'])
 
 @section('title' , '注册 | 订百达')
@@ -70,30 +70,29 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-xs-2 control-label" for="license_num">
-                                        @if($user['type'] != cons('user.type.retailer'))
+                                @if($user['type'] != cons('user.type.retailer'))
+                                    <div class="form-group">
+                                        <label class="col-xs-2 control-label" for="license_num">
                                             <span class="red">*</span>
-                                        @endif
-                                        <span class="prompt">营业执照注册号:</span></label>
+                                            <span class="prompt">营业执照注册号:</span></label>
 
-                                    <div class="col-xs-9 col-md-4">
-                                        <input class="form-control" id="license_num" name="license_num"
-                                               placeholder="请输入执照注册号" type="text">
+                                        <div class="col-xs-9 col-md-4">
+                                            <input class="form-control" id="license_num" name="license_num"
+                                                   placeholder="请输入执照注册号" type="text">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="license">
-                                        @if($user['type'] != cons('user.type.retailer'))
-                                            <span class="red">*</span>
-                                        @endif
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="license">
+                                            @if($user['type'] != cons('user.type.retailer'))
+                                                <span class="red">*</span>
+                                            @endif
                                             营业执照:</label>
-                                    <div class="col-sm-9 col-md-4">
-                                        <div class="progress collapse">
-                                            <div class="progress-bar progress-bar-striped active"></div>
-                                        </div>
-                                        <span data-name="license" class="btn btn-primary btn-sm fileinput-button"
-                                              name="license">
+                                        <div class="col-sm-9 col-md-4">
+                                            <div class="progress collapse">
+                                                <div class="progress-bar progress-bar-striped active"></div>
+                                            </div>
+                                            <span data-name="license" class="btn btn-primary btn-sm fileinput-button"
+                                                  name="license">
                                             请选择图片文件
                                             <input type="file" accept="image/*"
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"
@@ -101,22 +100,21 @@
                                         </span>
 
 
-                                        <div class="image-preview w160">
-                                            <img src="" class="img-thumbnail">
+                                            <div class="image-preview w160">
+                                                <img src="" class="img-thumbnail">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="business_license"><span
+                                                    class="red">*</span> 食品流通许可证:</label>
 
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="business_license"><span
-                                                class="red">*</span> 食品流通许可证:</label>
-
-                                    <div class="col-sm-9 col-md-4">
-                                        <div class="progress collapse">
-                                            <div class="progress-bar progress-bar-striped active"></div>
-                                        </div>
-                                        <span data-name="business_license"
-                                              class="btn btn-primary btn-sm fileinput-button">
+                                        <div class="col-sm-9 col-md-4">
+                                            <div class="progress collapse">
+                                                <div class="progress-bar progress-bar-striped active"></div>
+                                            </div>
+                                            <span data-name="business_license"
+                                                  class="btn btn-primary btn-sm fileinput-button">
                                             请选择图片文件
                                             <input type="file" accept="image/*"
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"
@@ -124,35 +122,39 @@
                                         </span>
 
 
-                                        <div class="image-preview w160">
-                                            <img src=""
-                                                 class="img-thumbnail">
+                                            <div class="image-preview w160">
+                                                <img src=""
+                                                     class="img-thumbnail">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    @if($user['type'] != cons('user.type.supplier'))
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label" for="username"><span
+                                                        class="red">*</span>
+                                                代理合同:</label>
 
-                                <div class="form-group hidden">
-                                    <label class="col-sm-2 control-label" for="username"><span class="red">*</span>
-                                        代理合同:</label>
-
-                                    <div class="col-sm-9 col-md-4">
-                                        <div class="progress collapse">
-                                            <div class="progress-bar progress-bar-striped active"></div>
-                                        </div>
-                                        <span data-name="agency_contract"
-                                              class="btn btn-primary btn-sm fileinput-button" name="agency_contract">
+                                            <div class="col-sm-9 col-md-4">
+                                                <div class="progress collapse">
+                                                    <div class="progress-bar progress-bar-striped active"></div>
+                                                </div>
+                                                <span data-name="agency_contract"
+                                                      class="btn btn-primary btn-sm fileinput-button"
+                                                      name="agency_contract">
                                             请选择图片文件
                                             <input type="file" accept="image/*"
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"
                                                    name="file" disabled>
                                         </span>
 
-                                        <div class="image-preview w160">
-                                            <img src=""
-                                                 class="img-thumbnail">
+                                                <div class="image-preview w160">
+                                                    <img src=""
+                                                         class="img-thumbnail">
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    @endif
+                                @endif
                                 <div class="form-group shop-address">
                                     <label class="col-sm-2 control-label"><span class="red">*</span> 所在地:</label>
 
@@ -255,22 +257,6 @@
                     streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
                 $('input[name="address[area_name]"]').val(provinceVal + cityVal + districtVal + streetVal);
             })
-
-            var type = $('input[name="type"]').val(),
-                wholesalerType = '{{ cons('user.type.wholesaler') }}',
-                agencyContract = $('span[name="agency_contract"]'),
-                addAddress = $('#add-address');
-            if (type < wholesalerType) {
-                addAddress.prop('disabled', true).closest('.form-group').addClass('hidden').find('.address-list').html('');
-                agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
-            } else {
-                if (type == wholesalerType) {
-                    agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
-                } else {
-                    agencyContract.closest('.form-group').removeClass('hidden').find('input[type="file"]').prop('disabled', false);
-                }
-                addAddress.prop('disabled', false).closest('.form-group').removeClass('hidden');
-            }
 
         })
     </script>

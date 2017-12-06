@@ -48,13 +48,16 @@
                                value="{{ isset($data['name'])?$data['name']:'' }}"
                                placeholder="{{empty($data['type']) ? '客户' : '供应商'}}名称">
                         <button type="submit" class="btn btn-blue-lighter search-by-get">查询</button>
+                        <a href="{{ url('business/salesman-customer/batch-create') }}"
+                           class="btn btn-blue-lighter">批量导入</a>
                         <a class="btn btn-border-blue customer-map" href="javascript:"
                            data-target="#customerAddressMapModal"
                            data-toggle="modal">
                             <i class="fa fa-map-marker"></i> {{empty($data['type']) ? '客户' : '供应商'}}分布图
                         </a>
                         @if(!empty($data['type']))
-                            <a class="btn btn-border-blue customer-map" href="{{asset('business/trade-request')}}">供应商申请<span class="red"> {{$relationApply ?? 0}} </span></a>
+                            <a class="btn btn-border-blue customer-map" href="{{asset('business/trade-request')}}">供应商申请<span
+                                        class="red"> {{$relationApply ?? 0}} </span></a>
                         @endif
                     </div>
                 </form>
@@ -210,9 +213,9 @@
          */
         $('.icon-baocun').click(function () {
             var self = $(this),
-                    select = self.siblings('select'),
-                    id = self.data('id'),
-                    store_type = $(select).find("option:selected").val();
+                select = self.siblings('select'),
+                id = self.data('id'),
+                store_type = $(select).find("option:selected").val();
             self.parents('td').html('<i class="fa fa-spinner fa-pulse"></i>');
             $data = {'store_type': store_type};
             $.ajax({

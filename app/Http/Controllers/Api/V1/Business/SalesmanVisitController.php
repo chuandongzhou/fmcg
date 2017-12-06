@@ -64,6 +64,7 @@ class SalesmanVisitController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+
         $salesman = salesman_auth()->user();
 
         $customer = $salesman->customers()->find($data['salesman_customer_id']);

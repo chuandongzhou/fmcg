@@ -159,7 +159,7 @@ return [
         \Riverslei\Pusher\PusherServiceProvider::class,
         \Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
-
+        \WeiHeng\ExcelImport\ExcelImportServiceProvider::class
 
 
     ],
@@ -221,6 +221,7 @@ return [
         'Pinyin' => Overtrue\LaravelPinyin\Facades\Pinyin::class,
         'Geetest' => Germey\Geetest\Geetest::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'ExcelImport' => \WeiHeng\Support\Facades\ExcelImport::class
     ],
 
 ];

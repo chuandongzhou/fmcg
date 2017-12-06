@@ -144,6 +144,12 @@ class AuthServiceProvider extends ServiceProvider
             return $order->shop_id == $user->shop_id;
         });
 
+        /**
+         * 验证车销单是否属于
+         */
+        $gate->define('validate-salesman-dispatch-truck', function ($user, $dispatchTruck) {
+            return $user->id == $dispatchTruck->salesman_id;
+        });
 
         /**
          * 验证抵费商品

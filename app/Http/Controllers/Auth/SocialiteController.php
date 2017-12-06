@@ -9,11 +9,7 @@ use Socialite;
 class SocialiteController extends Controller
 {
 
-    protected $driver = 'weixinweb';
-
-    protected $appDrivers = [
-        'weixin'
-    ];
+    protected $driver;
 
     public function __construct()
     {
@@ -36,7 +32,7 @@ class SocialiteController extends Controller
     public function callback()
     {
         $user = Socialite::driver($this->driver)->user();
-        $token = array_get($user, 'unionid');
+        $token = encrypt_socialite(array_get($user, 'unionid'));
         $avatar = array_get($user, 'headimgurl');
         $name = array_get($user, 'nickname');
 
@@ -52,20 +48,22 @@ class SocialiteController extends Controller
         }
 
     }
-
     /**
-     * 绑定平台账号
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * 处理返回
+     *
+     * @param $user
+     * @param null $error
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Symfony\Component\HttpFoundation\Response
      */
-    public function bindSocialite()
+    public function handleLoginResponse($user, $error = null)
     {
-        $token = $this->_getToken(session('socialite_token'));
-        if (!array_get($token, 'token')) {
-            return redirect('auth/login');
+        if ($error) {
+            dd($error);
+        } else {
+            return redirect('/');
         }
-        return view('auth.register-bind-socialite', compact('token'));
-    }
 
+    }
 
     /**
      * 处理登录
@@ -79,18 +77,19 @@ class SocialiteController extends Controller
         $cookie = app('cookie');
 
         $user = $userToken->user;
+
         //是否已锁定
         if ($user->status != cons('status.on')) {
-            return $this->_handleLoginResponce($user, '账号已锁定');
+            return $this->handleLoginResponse($user, '账号已锁定');
         }
         //帐号审核
         if ($user->audit_status != cons('user.audit_status.pass')) {
-            return $this->_handleLoginResponce($user, '账户未审核或审核不通过');
+            return $this->handleLoginResponse($user, '账户未审核或审核不通过');
         }
 
         //使用期限是否过期
         if ($user->is_expire) {
-            return $this->_handleLoginResponce($user, '账户已到期，请续费');
+            return $this->handleLoginResponse($user, '账户已到期，请续费');
         }
 
         if (!is_null($user->shop)) {
@@ -103,34 +102,9 @@ class SocialiteController extends Controller
             auth()->login($user, true);
             $cookie->queue('login_error', null, -1);
             $userToken->increment('login_count');
-            return $this->_handleLoginResponce($user);
+            return $this->handleLoginResponse($user);
         }
-        return $this->_handleLoginResponce($user, '登录失败，请重试');
-    }
-
-    /**
-     * 处理返回
-     *
-     * @param $user
-     * @param null $error
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Symfony\Component\HttpFoundation\Response
-     */
-    private function _handleLoginResponce($user, $error = null)
-    {
-        if (in_array($this->driver, $this->appDrivers)) {
-            if ($error) {
-                //return $this->error($error);
-            } else {
-                return $this->success(['user' => $user]);
-            }
-        } else {
-            if ($error) {
-                dd($error);
-            } else {
-                $redirectUrl = $user->type <= cons('user.type.wholesaler') ? '/' : url('personal/info');
-                return redirect($redirectUrl);
-            }
-        }
+        return $this->handleLoginResponse($user, '登录失败，请重试');
     }
 
     /**
@@ -139,7 +113,7 @@ class SocialiteController extends Controller
      * @param $token
      * @return array
      */
-    private function _getToken($token)
+    protected function getToken($token)
     {
         list($type, $avatar, $nickname, $token) = explode('|', $token);
 

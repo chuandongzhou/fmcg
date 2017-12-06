@@ -51,5 +51,16 @@
                 <div class="code-prompt">扫描二维码即可下载订百达外勤APP</div>
             </div>
         </div>
+        <div class="row download-role-item">
+            <div class="col-xs-6 down-panel text-center">
+                <h1><span class="icon-role-down cg"></span>仓管助手</h1>
+                <h2 class="title">订单合理分配, 方便库存管理</h2>
+                <div class="qr-code cg-qr-code"></div>
+                <div class="code-prompt">扫描二维码即可下载仓管助手APP</div>
+            </div>
+            <div class="col-xs-6">
+                <img src="{{ asset('images/cg-detail-img.png') }}">
+            </div>
+        </div>
     </div>
 @stop

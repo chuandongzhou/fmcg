@@ -54,7 +54,8 @@ return [
         //类型
         'type' => [
             'platform' => '自主订单',
-            'business' => '业务订单'
+            'business' => '业务订单',
+            'dispatch_truck' => '车销订单'
         ],
         'is_cancel' => [//订单是否被取消
             'off' => '未取消',
@@ -257,7 +258,8 @@ return [
         'android' => '安卓',
         'delivery' => '司机',
         'business' => '外勤',
-        'android_buyer' => '安卓买家'
+        'android_buyer' => '安卓买家',
+        'warehousekeeper' => '仓管',
     ],
 
     //提现状态

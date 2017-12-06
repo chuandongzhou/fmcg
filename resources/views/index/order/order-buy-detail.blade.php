@@ -267,7 +267,7 @@
                                     </div>
 
                                     <div class="panel-container">
-                                        @foreach($order->deliveryMan as $deliveryMan)
+                                        @foreach($order->deliveryMans as $deliveryMan)
                                             <ul class="contacts clearfix">
                                                 <li class="label-prompt">联系人 :</li>
                                                 <li>{{ $deliveryMan->name }}</li>
