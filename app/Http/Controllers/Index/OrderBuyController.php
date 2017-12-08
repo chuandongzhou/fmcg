@@ -22,7 +22,7 @@ class OrderBuyController extends OrderController
     {
         //parent::__construct();
         //供应商无购买商品功能
-        $this->middleware('forbid.only_seller');
+        $this->middleware('forbid:supplier,wholesaler,retailer');
         $this->userBalance = (new UserService())->getUserBalance();
     }
 

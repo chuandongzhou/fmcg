@@ -8,6 +8,13 @@ use App\Http\Controllers\Controller;
 class DeliveryTruckController extends Controller
 {
     /**
+     * DeliveryManController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('forbid:retailer');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

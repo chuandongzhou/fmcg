@@ -1,6 +1,6 @@
 @include('includes.quick-link')
 
-        <!--右侧贴边导航quick_links.js控制-->
+<!--右侧贴边导航quick_links.js控制-->
 <div class="quick-wrap">
     <div class="quick_links_panel">
         <div id="quick_links" class="quick_links">
@@ -31,7 +31,8 @@
                     <span class="cart_num">{{ $cartNum }}</span></a>
             </li>
             <li id="coupon-panel">
-                <a href="javascript:;" class="history_list pop-show-link hover_link"><i class="iconfont icon-zichan view"></i></a>
+                <a href="javascript:;" class="history_list pop-show-link hover_link"><i
+                            class="iconfont icon-zichan view"></i></a>
 
                 <div class="mp_tooltip">我的资产<i class="icon_arrow_right_black"></i>
                 </div>
@@ -43,11 +44,14 @@
                 </div>
 
             </li>
-            <li>
-                <a href="{{ url('like/goods') }}" class="mpbtn_wdsc hover_link"><i class="iconfont icon-shoucang wdsc"></i></a>
+            @if((isset($user) && $user->type < cons('user.type.maker')) || is_null($user))
+                <li>
+                    <a href="{{ url('like/goods') }}" class="mpbtn_wdsc hover_link"><i
+                                class="iconfont icon-shoucang wdsc"></i></a>
 
-                <div class="mp_tooltip">我的收藏<i class="icon_arrow_right_black"></i></div>
-            </li>
+                    <div class="mp_tooltip">我的收藏<i class="icon_arrow_right_black"></i></div>
+                </li>
+            @endif
         </div>
         <div class="quick_toggle">
             <li><a href="javascript:;" class="return_top"><i class="iconfont icon-zhiding top"></i>置顶</a></li>

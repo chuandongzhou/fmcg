@@ -28,8 +28,8 @@
                                 <span class="triangle">
                                  <input type="hidden" name="type" class="visible-select"
                                         value="{{ cons('user.type.retailer') }}">
-                                <input type="hidden" name="token[token]" value="{{ $token }}">
-                                <input type="hidden" name="token[type]" value="{{ $driver }}">
+                                <input type="hidden" name="token[token]" value="{{ array_get($token, 'token') }}">
+                                <input type="hidden" name="token[type]" value="{{ array_get($token, 'type') }}">
                             </span>
                             </div>
                         </div>
@@ -155,35 +155,27 @@
     <script type="text/javascript">
         $(function () {
             roleSelect();
+
+            $("body").on("click", ".select-role-wrap li a", function () {
+                var obj = $(this), type = obj.data('type'), visibleItemSelector = '.visible-item-' + type;
+                $('.visible-item').not(visibleItemSelector).each(function () {
+                    $(this).addClass('hidden').find('input , select').prop('disabled', true);
+                });
+                $(visibleItemSelector).each(function () {
+                    $(this).removeClass('hidden').find('input , select').prop('disabled', false);
+                })
+            });
+
+            $('.select-role-wrap li a').trigger('click');
+
             /**
              * 地址选择
              * @type {Array}
              */
-            var json = formatAddress(addressData)
-                , addressArea = $('#address-area')
-                , addressStreet = $('#address-street')
-                , addressName = ''
-                , provinceInput = $('input[name="address[province_id]"]')
-                , cityInput = $('input[name="address[city_id]"]')
-                , districtInput = $('input[name="address[district_id]"]')
-                , streetInput = $('input[name="address[street_id]"]')
-                , areaNameInput = $('input[name="address[area_name]"]');
-            addressSelect(json, '#txt_area', addressArea, function (scroller, text, value) {
-                addressStreet.html('');
-                $('#txt_street').unbind('click');
-                addressName = text.join('');
-                addressArea.html(addressName);
-                provinceInput.val(value[0]);
-                cityInput.val(value[1]);
-                districtInput.val(value[2]);
-                streetInput.val(0);
-                areaNameInput.val(addressName);
-                if (value[2]) {
-                    setStreetArea(value[2], addressStreet, streetInput, areaNameInput);
-                }
-            });
+            addressChanged(addressData);
+
             imageUpload();
-            visibleSelect();
+
             //短信发送成功倒计时
             $('.send-sms').on('done.hct.ajax', function (data, textStatus) {
                 var $this = $(this);

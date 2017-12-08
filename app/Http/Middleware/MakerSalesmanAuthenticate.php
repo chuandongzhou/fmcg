@@ -34,7 +34,7 @@ class MakerSalesmanAuthenticate
      */
     public function handle($request, Closure $next)
     {
-        if (is_null($this->auth->user()->maker ?? null) || $this->auth->guest()) {
+        if ($this->auth->guest() || is_null($this->auth->user()->maker_id ?? null)) {
             return Apiv1Response::create('forbidden', []);
         }
         return $next($request);

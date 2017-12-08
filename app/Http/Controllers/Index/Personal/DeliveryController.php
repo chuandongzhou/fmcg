@@ -20,6 +20,7 @@ class DeliveryController extends Controller
     public function __construct()
     {
         $this->middleware('deposit');
+        $this->middleware('forbid:retailer');
     }
 
     /**

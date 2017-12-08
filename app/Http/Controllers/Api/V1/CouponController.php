@@ -14,6 +14,7 @@ class CouponController extends Controller
     public function __construct()
     {
         $this->middleware('deposit:true');
+        $this->middleware('forbid:retailer');
     }
 
     /**

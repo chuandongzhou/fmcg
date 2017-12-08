@@ -24,16 +24,20 @@ class ForbidOnlySeller
     {
         $this->auth = $auth;
     }
+
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
+     * @param  $role
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role = '')
     {
-        if ($this->auth->user()->type > cons('user.type.supplier')) {
+        $allow = $this->auth->user()->type > cons('user.type.supplier');
+        $allow = $role ? !$allow : $allow;
+        if ($allow) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {

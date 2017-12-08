@@ -23,7 +23,7 @@ class InventoryController extends Controller
 
     public function __construct(InventoryService $inventoryService)
     {
-        $this->middleware('retailer');
+        $this->middleware('forbid:retailer');
         $this->inventoryService = $inventoryService;
         $this->shop = auth()->user()->shop;
     }

@@ -20,6 +20,12 @@ use Mockery\Exception;
 
 class SalesmanCustomerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('forbid:retailer', ['only' => ['import', 'update', 'destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

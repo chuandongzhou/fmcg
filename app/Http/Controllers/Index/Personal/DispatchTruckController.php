@@ -10,13 +10,21 @@ use Illuminate\Http\Request;
 
 class DispatchTruckController extends Controller
 {
+
+    /**
+     * DeliveryManController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('forbid:retailer');
+    }
     /**
      * 列表
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getIndex(Request $request)
+    public function index(Request $request)
     {
         $user = auth()->user();
         $data = $request->all();

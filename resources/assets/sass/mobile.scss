@@ -1,5 +1,5 @@
 @import "variables";
-@import "bootstrap/mixins";
+@import "bootstrap/bootstrap/mixins";
 
 html {
   font-size: 62.5%
@@ -634,6 +634,8 @@ a {
         a {
           display: inline-block;
           position: relative;
+          @include square(35px);
+          vertical-align:middle;
           input[type=file] {
             position: absolute;
             width: 100%;

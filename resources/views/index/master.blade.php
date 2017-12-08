@@ -103,7 +103,7 @@
                                 </div>
                             </li>
                             <li><a href="{{ url('help') }}"> 帮助中心</a></li>
-                            @if((isset($user) && $user->type < cons('user.type.supplier')) || is_null($user))
+                            @if((isset($user) && $user->type < cons('user.type.maker')) || is_null($user))
                                 <li class="collect-select">
                                     <a href="{{ url('like/goods') }}" class="collect-selected">
                                         <span class="selected">收藏夹</span>

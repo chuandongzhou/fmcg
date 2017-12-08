@@ -32,7 +32,13 @@ class DispatchTruckController extends Controller
     public function index(Request $request)
     {
         $salesmanUser = salesman_auth()->user();
-        $dispatchTrucks = $salesmanUser->dispatchTrucks()->with('truck')->orderBy('id', 'DESC')->paginate()->toArray();
+        $dispatchTrucks = $salesmanUser->dispatchTrucks()->condition($request->all())->with('truck')->orderBy('id',
+            'DESC')->paginate();
+        $dispatchTrucks->each(function ($item) {
+            $item->setAppends(['status_name']);
+        });
+        $dispatchTrucks = $dispatchTrucks->toArray();
+
         return $this->success(compact('dispatchTrucks'));
     }
 
@@ -45,33 +51,31 @@ class DispatchTruckController extends Controller
      */
     public function store(Request $request, $dispatchId)
     {
-//        $data = $request->all();
+        $data = $request->all();
 
-        $data = [
-            'salesman_customer_id' => 35,
-            'goods' => [
-                [
-                    'id' => 6,
-                    'price' => '169',
-                    'num' => 6,
-                    'pieces' => 0
-                ]
-            ],
-            "gifts" => [
-                [
-                    "id" => 6,
-                    "num" => 13,
-                    "pieces" => 2
-                ]
-            ],
+        /* $data = [
+             'salesman_customer_id' => 35,
+             'goods' => [
+                 [
+                     'id' => 6,
+                     'price' => '169',
+                     'num' => 6,
+                     'pieces' => 0
+                 ]
+             ],
+             "gifts" => [
+                 [
+                     "id" => 6,
+                     "num" => 13,
+                     "pieces" => 2
+                 ]
+             ],
 
-            'order_remark' => '',
-            'x_lng' => '',
-            'y_lat' => '',
-            'address' => ''
-        ];
-        // dd($data);
-
+             'order_remark' => '',
+             'x_lng' => '',
+             'y_lat' => '',
+             'address' => ''
+         ];*/
         $salesman = salesman_auth()->user();
 
         $dispatchTruck = DispatchTruck::with('truckSalesGoods.goodsPieces')->find($dispatchId);
@@ -90,7 +94,7 @@ class DispatchTruckController extends Controller
         }
 
         // 验证车销单库存是否足够
-        $orderGoodsDetail = $this->_formatGoodsNum($data['goods'], $data['gifts']); //商品加赠品总量
+        $orderGoodsDetail = $this->_formatGoodsNum($data['goods'], array_get($data, 'gifts', [])); //商品加赠品总量
 
         $inventoryFill = $this->_validateInventory($dispatchTruck->truckSalesGoods, $orderGoodsDetail['result']);
 
@@ -124,6 +128,7 @@ class DispatchTruckController extends Controller
                         $salesmanOrderData['order_remark'] = isset($data['order_remark']) ? $data['order_remark'] : '';
                         $salesmanOrderData['type'] = $orderConf['type']['order'];
                         $salesmanOrderData['shop_id'] = $salesman->shop_id;
+                        $salesmanOrderData['dispatch_truck_id'] = $dispatchTruck->id;
                         $salesmanOrderData['amount'] = $orderGoodsDetail['amount'];
                         $salesmanOrderData['status'] = cons('salesman.order.status.passed');
                         // 减去车销单库存
@@ -164,13 +169,13 @@ class DispatchTruckController extends Controller
                             }
                         }
                         // 添加平台订单
-                        $addPlatformResult = $this->_addPlatformOrder($orderForm, $salesman);
+                        $addPlatformResult = $this->_addPlatformOrder($orderForm, $salesman, $dispatchTruck->id);
                         return $addPlatformResult === true ? 'success' : false;
 
                     }
                     return 'success';
                 }
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 $visit->delete();
                 return false;
             }
@@ -192,17 +197,21 @@ class DispatchTruckController extends Controller
     public function detail($dispatchId)
     {
         $salesmanUser = salesman_auth()->user();
-        $dispatchTruck = DispatchTruck::with('deliveryMans', 'salesman', 'orders.goods.goodsPieces',
-            'orders.shippingAddress.address',
+        $dispatchTruck = DispatchTruck::with('deliveryMans', 'truck', 'salesman',
+            'salesmanVisitOrder.goods.goodsPieces',
             'truckSalesGoods.goodsPieces')->find($dispatchId);
 
         if (Gate::forUser($salesmanUser)->denies('validate-salesman-dispatch-truck', $dispatchTruck)) {
             return $this->error('车销单不存在');
         }
-        $truckSalesGoods = $this->_totalTruckSalesGoods($dispatchTruck->orders);
 
+        //获取已销售商品
+        $truckSalesGoods = $this->_totalTruckSalesGoods($dispatchTruck->salesmanVisitOrder);
+
+        //格式化已销售商品单位
         $dispatchTruck->truckSoldGoods = $this->_formatTruckSalesGoods($truckSalesGoods);
 
+        //获取剩余商品
         $dispatchTruck->dispatchTruckSurplus = $this->_formatTruckSurplusGoods($dispatchTruck->truckSalesGoods);
 
         return $this->success(compact('dispatchTruck'));
@@ -217,7 +226,7 @@ class DispatchTruckController extends Controller
     public function dispatchGoods($dispatchId)
     {
         $salesmanUser = salesman_auth()->user();
-        $dispatchTruck = DispatchTruck::find($dispatchId);
+        $dispatchTruck = DispatchTruck::with('truckSalesGoods.goodsPieces')->find($dispatchId);
 
         if (Gate::forUser($salesmanUser)->denies('validate-salesman-dispatch-truck', $dispatchTruck)) {
             return $this->error('车销单不存在');
@@ -229,25 +238,30 @@ class DispatchTruckController extends Controller
     /**
      * 已销售商品总计
      *
-     * @param $truckSalesOrders
+     * @param $truckSoldOrders
      * @return array
      */
-    private function _totalTruckSalesGoods($truckSalesOrders)
+    private function _totalTruckSalesGoods($truckSoldOrders)
     {
-
         $salesGoods = collect();
-        foreach ($truckSalesOrders as $order) {
-            $order->setAppends(['user_shipping_address_name']);
+        foreach ($truckSoldOrders as $order) {
+            $order->setAppends(['shipping_address']);
             foreach ($order->goods as $goods) {
                 $salesGoods->push($goods);
             }
         }
+
         $data = [];
         foreach ($salesGoods as $item) {
             $goodsId = $item->id;
             $pivot = $item->pivot;
             if (isset($data[$goodsId])) {
                 $data[$goodsId]['order_count']++;
+                $data[$goodsId]['orders'][] = [
+                    'id' => $pivot->salesman_visit_order_id,
+                    'num' => $pivot->num,
+                    'pieces' => $pivot->pieces,
+                ];
                 $data[$goodsId]['num'][$pivot->pieces] = isset($data[$goodsId]['num'][$pivot->pieces]) ? $data[$goodsId]['num'][$pivot->pieces] + $pivot->num : $pivot->num;
             } else {
                 $data[$goodsId] = [
@@ -257,6 +271,13 @@ class DispatchTruckController extends Controller
                     'order_count' => 1,
                     'num' => [
                         $pivot->pieces => $pivot->num
+                    ],
+                    'orders' => [
+                        [
+                            'id' => $pivot->salesman_visit_order_id,
+                            'num' => $pivot->num,
+                            'pieces' => $pivot->pieces,
+                        ]
                     ],
                     'goods_pieces' => $item->goodsPieces->toArray()
                 ];
@@ -307,6 +328,8 @@ class DispatchTruckController extends Controller
                 $item['price_wholesaler'] = $goods->price_wholesaler;
                 $item['pieces_retailer'] = $goods->pieces_retailer;
                 $item['pieces_wholesaler'] = $goods->pieces_wholesaler;
+                $item['goods_pieces'] = array_only($goods->goodsPieces->toArray(),
+                    ['pieces_level_1', 'pieces_level_2', 'pieces_level_3']);
             }
             $result[] = $item;
         }
@@ -424,9 +447,10 @@ class DispatchTruckController extends Controller
      *
      * @param $salesmanVisitOrder
      * @param \App\Models\Salesman $salesman
-     * @return array|bool
+     * @param $dispatchTruckId
+     * @return bool
      */
-    private function _addPlatformOrder($salesmanVisitOrder, Salesman $salesman)
+    private function _addPlatformOrder($salesmanVisitOrder, Salesman $salesman, $dispatchTruckId)
     {
         $syncConf = cons('salesman.order.sync');
         $orderConf = cons('order');
@@ -437,6 +461,7 @@ class DispatchTruckController extends Controller
             'price' => $salesmanVisitOrder->amount,
             'pay_type' => $syncConf['pay_type'],
             'pay_way' => $syncConf['pay_way'],
+            'dispatch_truck_id' => $dispatchTruckId,
             'type' => cons('order.type.dispatch_truck'),
             'status' => $orderConf['status']['send'],
             'numbers' => (new OrderService())->getNumbers($salesman->shop_id),
@@ -496,6 +521,10 @@ class DispatchTruckController extends Controller
                     return false;
                 }
             }
+            if (!$salesmanVisitOrder->fill(['order_id' => $orderTemp->id])->save()) {
+                return false;
+            }
+
         } else {
             return false;
         }

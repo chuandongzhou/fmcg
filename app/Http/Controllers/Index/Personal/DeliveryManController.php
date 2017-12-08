@@ -16,6 +16,7 @@ class DeliveryManController extends Controller
     public function __construct()
     {
         $this->middleware('deposit');
+        $this->middleware('forbid:retailer');
     }
     /**
      * 配送人员列表
