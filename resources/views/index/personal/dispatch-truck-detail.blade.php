@@ -41,7 +41,7 @@
                                             <td>{{$dispatchTruck->truck->name}}</td>
                                             <td>{{$dispatchTruck->truck->license_plate}}</td>
                                             <td>{!! implode("|",array_column($dispatchTruck->deliveryMans->toArray(), 'name')) !!}</td>
-                                            <td>{{$dispatchTruck->orders->count()}}</td>
+                                            <td>{{$dispatchTruck->orders()->where('status','<',cons('order.status.invalid'))->count()}}</td>
                                             <td>{{$dispatchTruck->alreadyPaidAmount}}</td>
                                             <td>{{$dispatchTruck->unpaidAmount}}</td>
                                             <td>{{$dispatchTruck->status_name}}</td>
@@ -71,15 +71,17 @@
                                         </thead>
                                         <tbody>
                                         @foreach($dispatchTruck->orders as $order)
-                                            <tr>
-                                                <td>{{$order->id}}</td>
-                                                <td>{{$order->price}}</td>
-                                                <td>{{$order->pay_type_name}}</td>
-                                                <td>{{$order->user_shop_name}}</td>
-                                                <td>{{$order->user_contact}}</td>
-                                                <td>{{$order->user_contact_info}}</td>
-                                                <td>{{$order->user_shop_address->area_name}}</td>
-                                            </tr>
+                                            @if($order->status < cons('order.status.invalid'))
+                                                <tr>
+                                                    <td>{{$order->id}}</td>
+                                                    <td>{{$order->price}}</td>
+                                                    <td>{{$order->pay_type_name}}</td>
+                                                    <td>{{$order->user_shop_name}}</td>
+                                                    <td>{{$order->user_contact}}</td>
+                                                    <td>{{$order->user_contact_info ?? ''}}</td>
+                                                    <td>{{($order->user_shop_address ?? $order->business_address_name) ?? ''}}</td>
+                                                </tr>
+                                            @endif
                                         @endforeach
                                         </tbody>
                                     </table>

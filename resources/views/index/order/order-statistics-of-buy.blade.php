@@ -132,7 +132,7 @@
                                     <td>{{ number_format($item['actualAmount'], 2) }}</td>
                                     <td>{{ number_format($item['notPaidAmount'], 2) }}</td>
                                     <td>{{ $item['contact'] }}</td>
-                                    <td>{{ $item['address'] }}</td>
+                                    <td>{{ $item['address']}}</td>
                                     <td>
                                         <a href="javascript:"
                                            onclick="window.open ('{{ url('order/statistics-of-buy-user-detail?shop_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'shop_name')) }}', 'newwindow', 'height=600, width=1000')">明细</a>

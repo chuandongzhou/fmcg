@@ -469,8 +469,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
             $router->resource('bank', 'UserBankController',
                 ['only' => ['index', 'store', 'show', 'update', 'destroy']]);          //提现账号
+            $router->put('delivery-man/{delivery_man}/status', 'DeliveryManController@status');//配送人员
             $router->resource('delivery-man', 'DeliveryManController',
-                ['only' => ['index', 'store', 'update', 'destroy']]);          //配送人员
+                ['only' => ['index', 'store', 'update', 'destroy']]);
+
             $router->put('shipping-address/default/{address}', 'ShippingAddressController@addressDefault');
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
             $router->controller('finance', 'FinanceController');    //提现相关操作

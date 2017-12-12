@@ -175,7 +175,7 @@ class Salesman extends Model implements AuthenticatableContract
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function dispatchTruck()
+    public function dispatchTrucks()
     {
         return $this->hasMany(DispatchTruck::class);
     }

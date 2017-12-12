@@ -986,6 +986,7 @@ class OrderController extends Controller
 
         $orderStatistics = $this->_orderStatistics($orders);
         extract($this->_groupOrderByType($orders));
+
         $shopDetails = [
             'id' => $isSeller ? $firstOrder->user_id : $firstOrder->shop_id,
             'shopName' => $shopName,
@@ -1001,7 +1002,6 @@ class OrderController extends Controller
                 return $order->pay_status < cons('order.pay_status.refund_success') && $order->status != cons('order.status.invalid');
             })->sum('after_rebates_price'),
         ];
-
         if ($isSeller) {
             $shopDetails['user_salesman'] = $firstOrder->user_salesman;
         }

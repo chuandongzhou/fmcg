@@ -116,13 +116,13 @@ class SalesmanController extends Controller
      * @param $salesman
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function destroy($salesman)
+    /*public function destroy($salesman)
     {
         if (Gate::denies('validate-salesman', $salesman)) {
             return $this->error('业务员不存在');
         }
         return $salesman->delete() ? $this->success('删除业务员成功') : $this->error('删除业务员失败');
-    }
+    }*/
 
     /**
      * 批量删除业务员
@@ -130,7 +130,7 @@ class SalesmanController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function batchDelete(Request $request)
+    /*public function batchDelete(Request $request)
     {
         $salesmanId = $request->input('salesman_id');
         if (empty($salesmanId)) {
@@ -138,7 +138,7 @@ class SalesmanController extends Controller
         }
         return auth()->user()->shop->salesmen()->whereIn('id',
             $salesmanId)->delete() ? $this->success('删除业务员成功') : $this->error('删除业务员时出现问题');
-    }
+    }*/
 
     /**
      * 设置业务员目标

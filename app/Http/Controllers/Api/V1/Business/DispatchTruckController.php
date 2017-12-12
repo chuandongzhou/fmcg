@@ -12,6 +12,7 @@ use App\Models\SalesmanVisitOrderGoods;
 use App\Services\GoodsService;
 use App\Services\OrderService;
 use App\Services\ShippingAddressService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Gate;
 use DB;
@@ -112,7 +113,8 @@ class DispatchTruckController extends Controller
             $customer,
             $visit,
             $dispatchTruck,
-            $orderGoodsDetail
+            $orderGoodsDetail,
+            $dispatchId
         ) {
             try {
                 $orderConf = cons('salesman.order');
@@ -164,7 +166,7 @@ class DispatchTruckController extends Controller
                             }
                         }
                         // 添加平台订单
-                        $addPlatformResult = $this->_addPlatformOrder($orderForm, $salesman);
+                        $addPlatformResult = $this->_addPlatformOrder($orderForm, $salesman,$dispatchId);
                         return $addPlatformResult === true ? 'success' : false;
 
                     }
@@ -426,12 +428,14 @@ class DispatchTruckController extends Controller
      * @param \App\Models\Salesman $salesman
      * @return array|bool
      */
-    private function _addPlatformOrder($salesmanVisitOrder, Salesman $salesman)
+    private function _addPlatformOrder($salesmanVisitOrder, Salesman $salesman,$dispatchTruckId)
     {
         $syncConf = cons('salesman.order.sync');
         $orderConf = cons('order');
         $shippingAddressService = new ShippingAddressService();
         $orderData = [
+            'dispatch_truck_id' => $dispatchTruckId,
+            'delivery_finished_at'  => Carbon::now(),
             'user_id' => $salesmanVisitOrder->customer_user_id,
             'shop_id' => $salesman->shop_id,
             'price' => $salesmanVisitOrder->amount,

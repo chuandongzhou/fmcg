@@ -150,7 +150,7 @@
                                         <td>{{ number_format($item['targetFee'], 2) }}</td>
                                         <td>{{ number_format($item['notPaidAmount'], 2) }}</td>
                                         <td>{{ $item['contact'] }}</td>
-                                        <td>{{ $item['address']->address_name ?? '' }}</td>
+                                        <td>{{ $item['address'] or '' }}</td>
                                         <td>{{ $item['user_salesman'] }}</td>
                                         <td><a href="javascript:"
                                                onclick="window.open ('{{ url('order/statistics-of-sell-user-detail?user_id=' . $item['id']) . '&shopName='.$item['shopName'] .'&contact='.$item['contact'] .'&'. http_build_query(array_except($data , 'user_shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a>

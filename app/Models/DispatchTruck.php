@@ -39,6 +39,7 @@ class DispatchTruck extends Model
      */
     public function orders()
     {
+        //注意作废订单
         return $this->hasMany('App\Models\Order');
     }
 
@@ -84,7 +85,6 @@ class DispatchTruck extends Model
         return $this->belongsToMany('App\Models\Goods', 'truck_sales_goods',
             'dispatch_truck_id')->withPivot(['quantity', 'pieces', 'surplus']);
     }
-    
 
     /**
      * 关联货车

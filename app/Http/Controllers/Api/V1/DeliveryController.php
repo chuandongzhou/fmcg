@@ -96,7 +96,7 @@ class DeliveryController extends Controller
     {
         $idName = $request->input('id_name', null);
         $dtv = delivery_auth()->user()->dispatchTruck()->whereNull('back_time')->where('status',
-            cons('dispatch_truck.status.delivering'))->get();
+            cons('dispatch_truck.status.delivering'))->where('type', cons('dispatch_truck.type.dispatch'))->get();
         $orders = Order::
         whereNull('delivery_finished_at')
             ->whereIn('dispatch_truck_id', $dtv->pluck('id'))
@@ -160,13 +160,19 @@ class DeliveryController extends Controller
                     'dispatch_truck_id'
                 ]);
             },
+            'salesman',
             'truck',
             'deliveryMans',
             'orders.orderGoods.goods.goodsPieces',
             'orders.shippingAddress.address',
             'returnOrders.goods.goodsPieces',
+            'truckSalesGoods.goodsPieces',
+            'truckSalesGoods' => function ($goods) {
+                $goods->select(['id', 'name']);
+            }
         ];
-        $dtv = delivery_auth()->user()->dispatchTruck()->with($with)->whereNull('back_time')->first();
+        $dtv = delivery_auth()->user()->dispatchTruck()->with($with)
+            ->where('status', cons('dispatch_truck.status.delivering'))->first();
         if (!$dtv) {
             return $this->error('没有找到数据');
         }
@@ -177,6 +183,9 @@ class DeliveryController extends Controller
             $order->shippingAddress->setAppends(['address_name']);
             $order->shippingAddress->addHidden(['address']);
         };
+        $dtv->truckSalesGoods->each(function ($goods) {
+            $goods->surplus_string = InventoryService::calculateQuantity($goods, $goods->pivot->surplus);
+        });
         $dtv->order_goods_statis = DispatchTruckService::goodsStatistical($dtv->orders);
         $dtv->return_order_goods_statis = DispatchTruckService::returnOrderGoodsStatistical($dtv->returnOrders ?? []);
         return $this->success($dtv->toArray());
@@ -494,7 +503,7 @@ class DeliveryController extends Controller
             $inventoryService = new InventoryService();
             $inventoryService->clearOut($order->id);
 
-            foreach ($order->orderGoods as $orderGoods){
+            foreach ($order->orderGoods as $orderGoods) {
                 DispatchTruckReturnOrder::create([
                     'order_id' => $order->id,
                     'dispatch_truck_id' => $order->dispatch_truck_id,

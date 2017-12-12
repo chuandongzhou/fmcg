@@ -47,10 +47,11 @@ class DeliveryTruckController extends Controller
      */
     public function destroy(DeliveryTruck $deliveryTruck)
     {
-        if (Gate::denies('validate-warehouse-keeper', $deliveryTruck)) {
+        return $this->success('功能作废');
+        /*if (Gate::denies('validate-warehouse-keeper', $deliveryTruck)) {
             return $this->error('配送车辆不存在');
         }
-        return $deliveryTruck->delete() ? $this->success('删除配送车辆成功') : $this->error('删除配送车辆时出现问题');
+        return $deliveryTruck->delete() ? $this->success('删除配送车辆成功') : $this->error('删除配送车辆时出现问题');*/
     }
 
     /**

@@ -15,13 +15,13 @@ class WarehouseKeeperAuthenticate
     protected $auth;
 
     /**
-     * Create a new filter instance.
+     * WarehouseKeeperAuthenticate constructor.
      *
-     * @param \WeiHeng\Salesman\Guard $auth
+     * @param \WeiHeng\WarehouseKeeper\WarehouseKeeperGuard $auth
      */
     public function __construct(WarehouseKeeperGuard $auth)
     {
-       
+
         $this->auth = $auth;
     }
 
@@ -36,6 +36,8 @@ class WarehouseKeeperAuthenticate
     {
         if ($this->auth->guest()) {
             return response('Unauthorized.', 401);
+        } else if ($this->auth->user()->status == cons('status.off')) {
+            return response('suspended', 403);
         }
         return $next($request);
     }

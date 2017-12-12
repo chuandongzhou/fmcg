@@ -34,6 +34,7 @@ class Order extends Model
         'is_cancel',
         'cancel_by',
         'cancel_at',
+        'delivery_finished_at',
         'dispatch_truck_id',
         'dispatch_truck_sort'
     ];
@@ -618,14 +619,14 @@ class Order extends Model
     }
 
     /**
-     * 获取买家地址
+     * 获取买家店铺地址
      *
      * @return string
      */
     public function getUserShopAddressAttribute()
     {
         if ($this->user_id > 0) {
-            return $this->user ? $this->user->shop->shopAddress : (new AddressData());
+            return $this->user ? $this->user->shop->shopAddress->area_name : (new AddressData());
         } elseif ($this->salesmanVisitOrder) {
             return $this->salesmanVisitOrder->business_address;
         }
@@ -641,7 +642,7 @@ class Order extends Model
     {
 
         if ($this->user_id > 0) {
-            return isset($order->shippingAddress->address) ? $this->shippingAddress->address->address_name : '';
+            return isset($this->shippingAddress->address) ? $this->shippingAddress->address->address_name : '';
         } elseif ($this->salesmanVisitOrder) {
             return $this->salesmanVisitOrder->business_address;
         }

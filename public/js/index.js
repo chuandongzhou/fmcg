@@ -495,7 +495,6 @@ var deleteNoForm = function () {
  */
 var ajaxNoForm = function () {
     var ajaxNoForm = $('.ajax-no-form');
-
     /*
      var setButton = function (onText, offText) {
      ajaxNoForm.button({
@@ -504,7 +503,6 @@ var ajaxNoForm = function () {
      offText: offText
      });
      }*/
-
 
     $(document).on('click', '.ajax-no-form', function () {
         var self = $(this),
@@ -519,13 +517,13 @@ var ajaxNoForm = function () {
             onText: onText,
             offText: offText
         });
-
         // 序列化表单
         $.each(self.data('data') || {}, function (name, value) {
             data[name] = value
         });
 
         self.button('loading');
+        
         $.ajax({
             url: url,
             method: 'put',

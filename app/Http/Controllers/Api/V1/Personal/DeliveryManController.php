@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\v1\Controller;
 use App\Http\Requests;
 use App\Models\DeliveryMan;
 use App\Models\UserBank;
+use Illuminate\Http\Request;
 
 class DeliveryManController extends Controller
 {
@@ -18,6 +19,7 @@ class DeliveryManController extends Controller
     {
         $this->middleware('deposit');
     }
+
     /**
      * 获取配送人员信息
      *
@@ -43,7 +45,7 @@ class DeliveryManController extends Controller
             return $this->success('添加成功');
         }
 
-        return $this->success('添加配送人员时出现问题');
+        return $this->error('添加配送人员时出现问题');
     }
 
     /**
@@ -55,11 +57,11 @@ class DeliveryManController extends Controller
      */
     public function update(Requests\Api\v1\UpdateDeliveryManRequest $request, $deliveryMan)
     {
-        if ($deliveryMan->fill($request->only(['password', 'pos_sign', 'name', 'phone']))->save()) {
+        if ($deliveryMan->fill($request->only(['password', 'pos_sign', 'name', 'phone', 'status']))->save()) {
             return $this->success('保存成功');
         }
 
-        return $this->success('保存配送人员时出现问题');
+        return $this->error('保存失败');
     }
 
     /**
@@ -70,10 +72,24 @@ class DeliveryManController extends Controller
      */
     public function destroy($deliveryMan)
     {
-        if ($deliveryMan->delete()) {
-            return $this->success('删除配送人员成功');
-        }
+        return $this->success('功能作废');
+    }
 
-        return $this->error('删除时遇到问题');
+    /**
+     * 启用or禁用
+     *
+     * @param $deliveryMan
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function status($deliveryMan)
+    {
+        $dispatchTruck = $deliveryMan->dispatchTruck()->where('status', '<=',
+            cons('dispatch_truck.status.delivering'))->first();
+        if ($dispatchTruck) {
+            return $this->error('被占用!请等待');
+        }
+        $deliveryMan->status = (int)!$deliveryMan->status;
+        $deliveryMan->save();
+        return $this->success($deliveryMan->status ? 'success' : null);
     }
 }

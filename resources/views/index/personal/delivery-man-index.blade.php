@@ -50,11 +50,7 @@
                                     <td>
                                         {{ $man->pos_sign }}
                                     </td>
-                                    {{--<td>--}}
-                                        {{--{{ $man->expire }}--}}
-                                    {{--</td>--}}
                                     <td>
-
                                         <div role="group" class="btn-group btn-group-xs">
                                             <a data-toggle="modal"
                                                data-target="#deliveryModal" data-id="{{ $man->id }}"
@@ -66,15 +62,25 @@
                                                 <i class="iconfont icon-xiugai"></i> 编辑
                                             </a>
                                             {{--@if($man->expire_at)--}}
-                                                {{--<a data-target="#expireModal" data-toggle="modal" data-type="delivery"--}}
-                                                   {{--data-id="{{ $man->id }}">--}}
-                                                    {{--<i class="iconfont icon-chaopiao"></i>续费</a>--}}
+                                            {{--<a data-target="#expireModal" data-toggle="modal" data-type="delivery"--}}
+                                            {{--data-id="{{ $man->id }}">--}}
+                                            {{--<i class="iconfont icon-chaopiao"></i>续费</a>--}}
                                             {{--@endif--}}
-                                            <a data-url="{{ url('api/v1/personal/delivery-man/'. $man->id) }}"
+
+                                            <a href="javascript:" data-method="put"
+                                               data-url="{{ url('api/v1/personal/delivery-man/'. $man->id.'/status')}}"
+                                               data-status="{{ $man->status }}"
+                                               data-on='<i class="iconfont icon-qiyong"></i> 启用'
+                                               data-off='<i class="iconfont icon-jinyong"></i> 禁用'
+                                               class="ajax-no-form color-blue">
+                                                {!!  $man->status ? '<i class="iconfont icon-jinyong"></i> 禁用' : '<i class="iconfont icon-qiyong"></i> 启用' !!}
+                                            </a>
+
+                                            {{--<a data-url="{{ url('api/v1/personal/delivery-man/'. $man->id) }}"
                                                data-method="delete" class="red delete-no-form ajax" href="javascript:"
                                                type="button">
                                                 <i class="iconfont icon-shanchu"></i> 删除
-                                            </a>
+                                            </a>--}}
                                         </div>
                                     </td>
                                 </tr>
@@ -87,4 +93,10 @@
         </div>
     </div>
     @parent
+@stop
+@section('js')
+    @parent
+    <script type="text/javascript">
+        ajaxNoForm();
+    </script>
 @stop

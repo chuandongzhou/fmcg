@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Forbid;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -40,5 +41,6 @@ class Kernel extends HttpKernel
         'child.auth' =>  \App\Http\Middleware\ChildUserAuthenticate::class,
         'maker_salesman' =>  \App\Http\Middleware\MakerSalesmanAuthenticate::class,
         'wk.auth' =>  \App\Http\Middleware\WarehouseKeeperAuthenticate::class,
+        'forbid' => Forbid::class
     ];
 }

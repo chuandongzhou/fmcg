@@ -92,7 +92,7 @@
                                                        {{--data-id="{{ $man->id }}">--}}
                                                         {{--<i class="iconfont icon-chaopiao"></i>续费</a>--}}
                                                 @endif
-                                                @if(auth()->user()->type != cons('user.type.maker'))
+                                                {{--@if(auth()->user()->type != cons('user.type.maker'))
                                                     <a data-url="{{ url('api/v1/business/salesman/'. $man->id) }}"
                                                        data-method="delete"
                                                        data-danger="确定要删除吗？"
@@ -100,7 +100,7 @@
                                                                 class="iconfont icon-shanchu"></i>
                                                         删除
                                                     </a>
-                                                @endif
+                                                @endif--}}
 
                                             </div>
                                         @endif
@@ -111,13 +111,13 @@
 
                         </table>
                     </div>
-                    <div class="col-sm-12 form-group remove-panel">
-                        <label><input type="checkbox" class="parent"> 全选</label>
-                        <a data-url="{{ url('api/v1/business/salesman/batch-delete') }}" data-method="delete"
-                           class="btn btn-red ajax" type="button">
-                            批量删除
-                        </a>
-                    </div>
+                    {{--<div class="col-sm-12 form-group remove-panel">--}}
+                        {{--<label><input type="checkbox" class="parent"> 全选</label>--}}
+                        {{--<a data-url="{{ url('api/v1/business/salesman/batch-delete') }}" data-method="delete"--}}
+                           {{--class="btn btn-red ajax" type="button">--}}
+                            {{--批量删除--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
                 </div>
             </form>
         </div>

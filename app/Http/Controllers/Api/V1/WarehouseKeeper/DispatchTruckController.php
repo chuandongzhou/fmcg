@@ -655,16 +655,16 @@ class DispatchTruckController extends Controller
      */
     public function salesmanList()
     {
-        return wk_auth()->user()->shop->salesmen()->select([
+        return wk_auth()->user()->shop->salesmen()->with('dispatchTrucks')->select([
             'id',
             'name',
             'shop_id',
             'contact_information'
         ])->get()->each(function ($salesman) {
             $salesman->delivery_status = 1;
-            $salesman->addHidden(['dispatchTruck']);
-            if ($salesman->dispatchTruck) {
-                foreach ($salesman->dispatchTruck as $dispatchTruck) {
+            $salesman->addHidden(['dispatchTrucks']);
+            if ($salesman->dispatchTrucks) {
+                foreach ($salesman->dispatchTrucks as $dispatchTruck) {
                     if ($dispatchTruck->status < cons('dispatch_truck.status.backed')) {
                         $salesman->delivery_status = 0;
                         break;
@@ -714,7 +714,7 @@ class DispatchTruckController extends Controller
     }
 
     /**
-     * 删除商品
+     * 删除车销单商品
      *
      * @param \Illuminate\Http\Request $request
      * @param $dtv_id
