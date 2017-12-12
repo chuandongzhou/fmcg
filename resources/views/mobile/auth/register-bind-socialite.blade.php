@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 footer-wrap bind">
-                    <a href="{{ url('weixin-auth/reg-socialite?t=' . $token['token']) }}" class="reg">没有账户,去注册</a>
+                    <a href="{{ url('weixin-auth/reg-socialite') }}" class="reg">没有账户,去注册</a>
                     {{--<a class="forget-pwd">忘记登录密码</a>--}}
                 </div>
             </div>

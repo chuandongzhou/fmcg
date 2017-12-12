@@ -20,12 +20,6 @@ class WeixinAuthController extends SocialiteController
     {
         $token = $this->getToken(session('socialite_token'));
 
-        /*$type = 1;
-        $avatar = 'https://afp.alicdn.com/afp-creative/creative/u124884735/6619de64aba4c59d359745cbc4a0a1eb.png';
-        $nickname = 'nickname';
-        $token = '247264723648264823682324';
-        $token = compact('type', 'avatar', 'nickname', 'token');*/
-
         if (!array_get($token, 'token')) {
             return redirect('auth/login');
         }
@@ -40,11 +34,11 @@ class WeixinAuthController extends SocialiteController
      */
     public function regSocialite(Request $request)
     {
-        $token = $request->input('t');
-        if (!$token) {
+        $token = $this->getToken(session('socialite_token'));
+        if (!array_get($token, 'token')) {
             return redirect('auth/login');
         }
-        return view('mobile.auth.register-reg-socialite', ['token' => $token, 'driver' => $this->driver]);
+        return view('mobile.auth.register-reg-socialite', compact('token'));
     }
 
     /**

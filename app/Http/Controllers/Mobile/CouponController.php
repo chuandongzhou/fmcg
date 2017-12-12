@@ -7,6 +7,11 @@ use Carbon\Carbon;
 
 class CouponController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('forbid:retailer');
+    }
+
     public function index()
     {
         $now = (new Carbon())->toDateString();

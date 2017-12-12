@@ -15,6 +15,7 @@ class ModelController extends Controller
     public function __construct()
     {
         $this->shop = auth()->user()->shop;
+        $this->middleware('forbid:retailer');
     }
 
     /**

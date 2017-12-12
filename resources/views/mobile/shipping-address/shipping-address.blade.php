@@ -87,33 +87,7 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        var json = formatAddress(addressData)
-            , addressArea = $('#address-area')
-            , addressStreet = $('#address-street')
-            , addressName = ''
-            , provinceInput = $('input[name="province_id"]')
-            , cityInput = $('input[name="city_id"]')
-            , districtInput = $('input[name="district_id"]')
-            , streetInput = $('input[name="street_id"]')
-            , areaNameInput = $('input[name="area_name"]')
-            , xLngInput = $('input[name="x_lng"]')
-            , yLatInput = $('input[name="y_lat"]');
-        addressSelect(json, '#txt_area', addressArea, function (scroller, text, value) {
-            addressStreet.html('');
-            $('#txt_street').unbind('click');
-            addressName = text.join('');
-            addressArea.html(addressName);
-            provinceInput.val(value[0]);
-            cityInput.val(value[1]);
-            districtInput.val(value[2]);
-            streetInput.val(0);
-            areaNameInput.val(addressName);
-            xLngInput.val(0);
-            yLatInput.val(0);
-            if (value[2]) {
-                setStreetArea(value[2], addressStreet, streetInput, areaNameInput, xLngInput, yLatInput);
-            }
-        });
+        addressChanged(addressData);
         setStreetArea({{ $shippingAddress->address->district_id or 0 }}, addressStreet, streetInput, areaNameInput, xLngInput, yLatInput);
     </script>
 @stop

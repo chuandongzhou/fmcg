@@ -168,7 +168,7 @@ class AuthController extends Controller
         //验证验证码
         $code = $request->input('code');
         if (!app('pushbox.sms')->verifyCode('register', $data['backup_mobile'], $code)) {
-           // return $this->error('短信验证码错误');
+            return $this->error('短信验证码错误');
         }
         session(['user' => $data]);
         return $this->success('验证成功');
@@ -203,7 +203,7 @@ class AuthController extends Controller
         $userInput = $request->only(['user_name', 'password', 'backup_mobile', 'type', 'code']);
 
         if (!app('pushbox.sms')->verifyCode('register', $userInput['backup_mobile'], $userInput['code'])) {
-            //return $this->error('短信验证码错误');
+            return $this->error('短信验证码错误');
         }
 
         !array_get($userInput, 'user_name') && ($userInput['user_name'] = $userInput['backup_mobile']);

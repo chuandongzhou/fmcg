@@ -16,6 +16,7 @@ class UserBankController extends Controller
     public function __construct()
     {
         $this->middleware('deposit:true');
+        $this->middleware('forbid:retailer');
     }
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

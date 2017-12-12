@@ -16,6 +16,11 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SalesStatisticsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('forbid:retailer');
+    }
     /**
      * Display a listing of the resource.
      *

@@ -19,7 +19,7 @@ class OrderSellController extends OrderController
      */
     public function __construct()
     {
-        $this->middleware('retailer');
+        $this->middleware('forbid:retailer');
         $this->middleware('deposit');
     }
 

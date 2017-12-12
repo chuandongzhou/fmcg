@@ -18,6 +18,7 @@ class UserBankController extends Controller
     {
         $this->user = auth()->user();
         $this->middleware('deposit:true');
+        $this->middleware('forbid:retailer');
     }
 
     /**

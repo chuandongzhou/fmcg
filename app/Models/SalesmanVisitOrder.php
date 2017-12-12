@@ -18,6 +18,7 @@ class SalesmanVisitOrder extends Model
         'order_remark',
         'shop_id',
         'apply_promo_id',
+        'dispatch_truck_id',
         'display_remark',
         'salesman_id',
         'salesman_visit_id',
@@ -68,6 +69,17 @@ class SalesmanVisitOrder extends Model
     public function orderGoods()
     {
         return $this->hasMany('App\Models\SalesmanVisitOrderGoods');
+    }
+
+    /**
+     * 关联商品表
+     *
+     * @return mixed
+     */
+    public function goods(){
+        return $this->belongsToMany('App\Models\Goods', 'salesman_visit_order_goods', 'salesman_visit_order_id',
+            'goods_id')->withTrashed()->withPivot('id', 'price',
+            'num', 'amount', 'pieces', 'type');
     }
 
     /**

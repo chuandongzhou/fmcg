@@ -14,12 +14,11 @@ use App\Services\AttrService;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Services\ImageUploadService;
-use App\Services\ImportService;
 use App\Services\InventoryService;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 use Gate;
 use DB;
+use ExcelImport;
 
 class MyGoodsController extends Controller
 {
@@ -410,16 +409,15 @@ class MyGoodsController extends Controller
      * @param $file
      * @param $postAttr
      * @param $attrs
-     * @return bool
+     * @return array
      */
     public function importGoods($file, $postAttr, $attrs)
     {
-        $filePath = $this->uploadExcel($file);
-        if (!$filePath['type']) {
-            return $filePath;
+        $results = ExcelImport::fetchContent($file);
+
+        if (!$results) {
+            return $this->setImportResult(ExcelImport::getErrorMsg());
         }
-        $results = Excel::selectSheetsByIndex(0)->load($filePath['info'], function ($reader) {
-        })->skip(1)->toArray();
 
         $shopId = isset($postAttr['shop_id']) && $postAttr['shop_id'] > 0 ? $postAttr['shop_id'] : 0;
 
@@ -461,40 +459,6 @@ class MyGoodsController extends Controller
             DB::rollBack();
             return $this->setImportResult($error);
         }
-    }
-
-    /**
-     * upload excel for goods
-     *
-     * @param $file
-     * @return bool|string
-     */
-    protected function uploadExcel($file)
-    {
-        $tempPath = config('path.upload_temp');
-
-        // 判断文件是否有效
-        if (!is_object($file) || !$file->isValid()) {
-            return $this->setImportResult('无效的文件');
-        }
-        $ext = $file->getClientOriginalExtension();
-
-        if (!in_array($ext, cons('goods.import_allow_ext'))) {
-            return $this->setImportResult('文件类型错误');
-        }
-
-        $path = date('Y/m/d/');
-        $name = uniqid() . '.' . $ext;
-
-        try {
-            // 移动到目录
-            $file->move($tempPath . $path, $name);
-        } catch (FileException $e) {
-            info($e);
-
-            return $this->setImportResult('上传失败');
-        }
-        return $this->setImportResult($tempPath . $path . $name, true);
     }
 
     /**

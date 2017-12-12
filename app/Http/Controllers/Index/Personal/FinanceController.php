@@ -18,6 +18,7 @@ class FinanceController extends Controller
     public function __construct()
     {
         $this->middleware('deposit:true');
+        $this->middleware('forbid:retailer');
     }
     /**
      * @param \Illuminate\Http\Request $request

@@ -32,7 +32,7 @@ class Forbid
      * @param \Closure $next
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function handle($request, Closure $next,...$roles)
+    public function handle($request, Closure $next, ...$roles)
     {
         if (!$this->check($roles)) {
             return $request->ajax() ? response('Unauthorized.', 401) : redirect()->back();
@@ -54,7 +54,7 @@ class Forbid
         $userType = array_map(function ($role) {
             return cons('user.type.' . $role);
         }, $roles);
-        if (in_array(auth()->user()->type, $userType)) {
+        if (in_array($this->auth->user()->type, $userType)) {
             return false;
         }
         return true;

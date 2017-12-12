@@ -23,6 +23,7 @@ class AssetController extends Controller
 
     public function __construct(AssetService $assetService)
     {
+        $this->middleware('forbid:supplier,wholesaler,retailer');
         $this->shop = auth()->user()->shop;
         $this->assetService = $assetService;
     }

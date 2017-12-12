@@ -14,6 +14,12 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('forbid:retailer');
+    }
+
     public function index(Request $request, $userType)
     {
         $type = array_get(cons('user.type'), $userType, head(cons('user.type')));

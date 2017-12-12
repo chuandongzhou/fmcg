@@ -151,7 +151,6 @@
             var json = formatAddress(addressData)
                 , addressArea = $('#txt_area');
             addressSelect(json, '#txt_area', addressArea, function (scroller, text, value) {
-
                 setCookie('province_id', value[0]);
                 setCookie('city_id', value[1]);
                 window.location.reload();

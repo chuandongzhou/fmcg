@@ -12,6 +12,7 @@ class LikeController extends Controller
 
     public function __construct()
     {
+        $this->middleware('forbid:maker');
         $this->userId = auth()->id();
     }
 

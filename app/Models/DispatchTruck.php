@@ -35,7 +35,7 @@ class DispatchTruck extends Model
     /**
      * 关联订单
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function orders()
     {
@@ -44,9 +44,20 @@ class DispatchTruck extends Model
     }
 
     /**
+     * 关联业务订单
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function salesmanVisitOrder()
+    {
+        return $this->hasMany('App\Models\SalesmanVisitOrder');
+    }
+
+
+    /**
      * 关联退货订单
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function returnOrders()
     {
@@ -85,6 +96,7 @@ class DispatchTruck extends Model
         return $this->belongsToMany('App\Models\Goods', 'truck_sales_goods',
             'dispatch_truck_id')->withPivot(['quantity', 'pieces', 'surplus']);
     }
+    
 
     /**
      * 关联货车

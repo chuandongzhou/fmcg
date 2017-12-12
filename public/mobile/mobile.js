@@ -477,3 +477,33 @@ var imageUpload = function () {
     });
 }
 
+/**
+ * 地址选择
+ * @type {Array}
+ */
+var addressChanged = function(addressData){
+    var json = formatAddress(addressData)
+        , addressArea = $('#address-area')
+        , addressStreet = $('#address-street')
+        , addressName = ''
+        , provinceInput = $('input[name="address[province_id]"]')
+        , cityInput = $('input[name="address[city_id]"]')
+        , districtInput = $('input[name="address[district_id]"]')
+        , streetInput = $('input[name="address[street_id]"]')
+        , areaNameInput = $('input[name="address[area_name]"]');
+    addressSelect(json, '#txt_area', addressArea, function (scroller, text, value) {
+        addressStreet.html('');
+        $('#txt_street').unbind('click');
+        addressName = text.join('');
+        addressArea.html(addressName);
+        provinceInput.val(value[0]);
+        cityInput.val(value[1]);
+        districtInput.val(value[2]);
+        streetInput.val(0);
+        areaNameInput.val(addressName);
+        if (value[2]) {
+            setStreetArea(value[2], addressStreet, streetInput, areaNameInput);
+        }
+    });
+}
+

@@ -16,6 +16,7 @@ class BillController extends Controller
     public function __construct(BillService $billService)
     {
         $this->billService = $billService;
+        $this->middleware('forbid:retailer');
     }
 
     /**

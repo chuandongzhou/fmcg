@@ -48,6 +48,7 @@ class SocialiteController extends Controller
         }
 
     }
+
     /**
      * 处理返回
      *
@@ -111,10 +112,13 @@ class SocialiteController extends Controller
      * 获取token
      *
      * @param $token
-     * @return array
+     * @return array|bool
      */
     protected function getToken($token)
     {
+        if (!$token) {
+            return false;
+        }
         list($type, $avatar, $nickname, $token) = explode('|', $token);
 
         return compact('type', 'avatar', 'nickname', 'token');

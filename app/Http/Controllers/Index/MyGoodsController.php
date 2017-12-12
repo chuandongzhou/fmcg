@@ -18,6 +18,12 @@ use Illuminate\Support\Facades\Response;
 
 class MyGoodsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('forbid:retailer');
+    }
+
     protected $sort = [
         'name',
         'price',
