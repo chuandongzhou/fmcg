@@ -95,7 +95,12 @@ class DispatchTruckController extends Controller
         }
 
         // 验证车销单库存是否足够
-        $orderGoodsDetail = $this->_formatGoodsNum($data['goods'], array_get($data, 'gifts', [])); //商品加赠品总量
+        $orderGoodsDetail = $this->_formatGoodsNum(array_get($data, 'goods', []),
+            array_get($data, 'gifts', [])); //商品加赠品总量
+
+        if (!$orderGoodsDetail) {
+            return $this->error('订单商品和赠品不能为空');
+        }
 
         $inventoryFill = $this->_validateInventory($dispatchTruck->truckSalesGoods, $orderGoodsDetail['result']);
 
@@ -103,90 +108,79 @@ class DispatchTruckController extends Controller
             return $this->error('商品库存不足');
         }
 
-        $visit = $salesman->visits()->create([
-                'salesman_customer_id' => $data['salesman_customer_id'],
-                'x_lng' => isset($data['x_lng']) ? $data['x_lng'] : '',
-                'y_lat' => isset($data['y_lat']) ? $data['y_lat'] : '',
-                'address' => isset($data['address']) ? $data['address'] : '',
-                'shop_id' => $salesman->shop_id,
-            ]
-        );
-        $result = DB::transaction(function () use (
-            $salesman,
-            $data,
-            $customer,
-            $visit,
-            $dispatchTruck,
-            $orderGoodsDetail,
-            $dispatchId
-        ) {
-            try {
-                $orderConf = cons('salesman.order');
-                if ($visit->exists) {
-                    if (!empty($data['goods'])) {
-                        //有商品下单
-                        $salesmanOrderData['salesman_visit_id'] = $visit->id;
-                        $salesmanOrderData['salesman_customer_id'] = $data['salesman_customer_id'];
-                        $salesmanOrderData['order_remark'] = isset($data['order_remark']) ? $data['order_remark'] : '';
-                        $salesmanOrderData['type'] = $orderConf['type']['order'];
-                        $salesmanOrderData['shop_id'] = $salesman->shop_id;
-                        $salesmanOrderData['dispatch_truck_id'] = $dispatchTruck->id;
-                        $salesmanOrderData['amount'] = $orderGoodsDetail['amount'];
-                        $salesmanOrderData['status'] = cons('salesman.order.status.passed');
-                        // 减去车销单库存
-                        $result = $this->_descTruckGoodsInventory($dispatchTruck->truckSalesGoods,
-                            $orderGoodsDetail['result']);
-                        if (!$result) {
-                            return false;
-                        }
 
-                        $orderForm = $salesman->orders()->create($salesmanOrderData);
-                        if ($orderForm->exists) {
-                            $orderGoodsArr = [];
-                            foreach ($data['goods'] as $orderGoods) {
-                                $goodsItem = [
-                                    'goods_id' => $orderGoods['id'],
-                                    'price' => $orderGoods['price'],
-                                    'num' => $orderGoods['num'],
-                                    'pieces' => $orderGoods['pieces'],
-                                    'amount' => bcmul($orderGoods['price'], $orderGoods['num'], 2),
-                                    'salesman_visit_id' => $visit->id,
-                                    'type' => $orderConf['goods']['type']['order']
-                                ];
-                                $orderGoodsArr[] = new SalesmanVisitOrderGoods($goodsItem);
-                            }
-                            //订单商品
-                            $orderForm->orderGoods()->saveMany($orderGoodsArr);
+        DB::beginTransaction();
+        try {
+            $visit = $salesman->visits()->create([
+                    'salesman_customer_id' => $data['salesman_customer_id'],
+                    'x_lng' => isset($data['x_lng']) ? $data['x_lng'] : '',
+                    'y_lat' => isset($data['y_lat']) ? $data['y_lat'] : '',
+                    'address' => isset($data['address']) ? $data['address'] : '',
+                    'shop_id' => $salesman->shop_id,
+                ]
+            );
 
-                            //礼物
-                            if ($gifts = array_get($data, 'gifts')) {
-                                $giftList = [];
-                                foreach ($gifts as $gift) {
-                                    $giftList[$gift['id']] = [
-                                        'num' => $gift['num'],
-                                        'pieces' => $gift['pieces'],
-                                    ];
-                                }
-                                $orderForm->gifts()->sync($giftList);
-                            }
-                        }
-                        // 添加平台订单
-                        $addPlatformResult = $this->_addPlatformOrder($orderForm, $salesman,$dispatchId);
-                        return $addPlatformResult === true ? 'success' : false;
+            $orderConf = cons('salesman.order');
 
-                    }
-                    return 'success';
+            if (!empty($data['goods'])) {
+                //有商品下单
+                $salesmanOrderData['salesman_visit_id'] = $visit->id;
+                $salesmanOrderData['salesman_customer_id'] = $data['salesman_customer_id'];
+                $salesmanOrderData['order_remark'] = isset($data['order_remark']) ? $data['order_remark'] : '';
+                $salesmanOrderData['type'] = $orderConf['type']['order'];
+                $salesmanOrderData['shop_id'] = $salesman->shop_id;
+                $salesmanOrderData['dispatch_truck_id'] = $dispatchTruck->id;
+                $salesmanOrderData['amount'] = $orderGoodsDetail['amount'];
+                $salesmanOrderData['status'] = cons('salesman.order.status.passed');
+                // 减去车销单库存
+                $result = $this->_descTruckGoodsInventory($dispatchTruck->truckSalesGoods, $orderGoodsDetail['result']);
+                if (!$result) {
+                    DB::rollback();
+                    return $this->error('下单时出现错误');
                 }
-            } catch (\Exception $e) {
-                $visit->delete();
-                return false;
+
+                $orderForm = $salesman->orders()->create($salesmanOrderData);
+                if ($orderForm->exists) {
+                    $orderGoodsArr = [];
+                    foreach ($data['goods'] as $orderGoods) {
+                        $goodsItem = [
+                            'goods_id' => $orderGoods['id'],
+                            'price' => $orderGoods['price'],
+                            'num' => $orderGoods['num'],
+                            'pieces' => $orderGoods['pieces'],
+                            'amount' => bcmul($orderGoods['price'], $orderGoods['num'], 2),
+                            'salesman_visit_id' => $visit->id,
+                            'type' => $orderConf['goods']['type']['order']
+                        ];
+                        $orderGoodsArr[] = new SalesmanVisitOrderGoods($goodsItem);
+                    }
+                    //订单商品
+                    $orderForm->orderGoods()->saveMany($orderGoodsArr);
+
+                    //礼物
+                    if ($gifts = array_get($data, 'gifts')) {
+                        $giftList = [];
+                        foreach ($gifts as $gift) {
+                            $giftList[$gift['id']] = [
+                                'num' => $gift['num'],
+                                'pieces' => $gift['pieces'],
+                            ];
+                        }
+                        $orderForm->gifts()->sync($giftList);
+                    }
+                }
+                // 添加平台订单
+                $addPlatformResult = $this->_addPlatformOrder($orderForm, $salesman, $dispatchTruck->id);
+                if (!$addPlatformResult) {
+                    DB::rollback();
+                    return $this->error('下单时出现错误');
+                }
             }
-        });
-        if ($result === 'success') {
+            DB::commit();
             return $this->success(['id' => $visit->id]);
-        } else {
-//            $visit->delete();
-            return $this->error(is_string($result) ? $result : '下单时出现错误');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->error('下单时出现错误');
         }
     }
 
@@ -201,6 +195,7 @@ class DispatchTruckController extends Controller
         $salesmanUser = salesman_auth()->user();
         $dispatchTruck = DispatchTruck::with('deliveryMans', 'truck', 'salesman',
             'salesmanVisitOrder.goods.goodsPieces',
+            'salesmanVisitOrder.gifts.goodsPieces',
             'truckSalesGoods.goodsPieces')->find($dispatchId);
 
         if (Gate::forUser($salesmanUser)->denies('validate-salesman-dispatch-truck', $dispatchTruck)) {
@@ -248,7 +243,12 @@ class DispatchTruckController extends Controller
         $salesGoods = collect();
         foreach ($truckSoldOrders as $order) {
             $order->setAppends(['shipping_address']);
+            //订单商品
             foreach ($order->goods as $goods) {
+                $salesGoods->push($goods);
+            }
+            //赠品
+            foreach ($order->gifts as $goods) {
                 $salesGoods->push($goods);
             }
         }
@@ -257,13 +257,20 @@ class DispatchTruckController extends Controller
         foreach ($salesGoods as $item) {
             $goodsId = $item->id;
             $pivot = $item->pivot;
+            $orderId = $pivot->salesman_visit_order_id;
             if (isset($data[$goodsId])) {
-                $data[$goodsId]['order_count']++;
-                $data[$goodsId]['orders'][] = [
-                    'id' => $pivot->salesman_visit_order_id,
-                    'num' => $pivot->num,
-                    'pieces' => $pivot->pieces,
-                ];
+                if (isset($data[$goodsId]['orders'] [$orderId])) {
+                    $data[$goodsId]['orders'] [$orderId]['num'][$pivot->pieces] = isset($data[$goodsId]['orders'] [$orderId]['num'][$pivot->pieces]) ? $data[$goodsId]['orders'] [$orderId]['num'][$pivot->pieces] + $pivot->num : $pivot->num;
+                } else {
+                    $data[$goodsId]['order_count']++;
+                    $data[$goodsId]['orders'][$orderId] = [
+                        'id' => $pivot->salesman_visit_order_id,
+                        'num' => [
+                            $pivot->pieces => $pivot->num
+                        ],
+                    ];
+                }
+
                 $data[$goodsId]['num'][$pivot->pieces] = isset($data[$goodsId]['num'][$pivot->pieces]) ? $data[$goodsId]['num'][$pivot->pieces] + $pivot->num : $pivot->num;
             } else {
                 $data[$goodsId] = [
@@ -275,11 +282,13 @@ class DispatchTruckController extends Controller
                         $pivot->pieces => $pivot->num
                     ],
                     'orders' => [
-                        [
-                            'id' => $pivot->salesman_visit_order_id,
-                            'num' => $pivot->num,
-                            'pieces' => $pivot->pieces,
-                        ]
+                        $orderId =>
+                            [
+                                'id' => $pivot->salesman_visit_order_id,
+                                'num' => [
+                                    $pivot->pieces => $pivot->num
+                                ],
+                            ]
                     ],
                     'goods_pieces' => $item->goodsPieces->toArray()
                 ];
@@ -300,6 +309,16 @@ class DispatchTruckController extends Controller
         $result = [];
         foreach ($truckSalesGoods as $item) {
             $item['num'] = $this->_convertGoodsNum($item['goods_pieces'], $item['num']);
+
+
+            if (!empty($orders = array_values(array_get($item, 'orders', [])))) {
+
+                foreach ($orders as $key =>$data) {
+                    $orders[$key]['num'] = $this->_convertGoodsNum($item['goods_pieces'], $data['num']);
+                }
+                $item['orders'] = $orders;
+            }
+
             unset($item['goods_pieces']);
             $result[] = $item;
         }
@@ -415,10 +434,13 @@ class DispatchTruckController extends Controller
      *
      * @param $goods
      * @param $gifts
-     * @return array
+     * @return array|bool
      */
     private function _formatGoodsNum($goods, $gifts)
     {
+        if (empty($goods) && empty($gifts)) {
+            return false;
+        }
         $result = [];
         $amount = 0;
         foreach ($goods as $item) {

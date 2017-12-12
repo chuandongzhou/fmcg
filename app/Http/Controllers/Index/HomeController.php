@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\AddressData;
 use App\Models\Advert;
-use App\Models\DispatchTruck;
 use App\Models\Goods;
 use App\Models\Order;
 use App\Models\Shop;
@@ -54,15 +53,11 @@ class HomeController extends Controller
 
     public function test(Request $request)
     {
-        $dispatch = DispatchTruck::with('truckSalesGoods')->find(236);
-        $goods = $dispatch->truckSalesGoods;
-
-        $pivot = $goods->first()->pivot;
-        $pivot->update(['surplus' => $pivot->surplus - 3]);
-
-        dd($pivot);
-
-        dd($request->server());
+        try {
+            $a = $this->changeTest($request);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
 
         dd('test');
         return view('index.index.test');
@@ -129,6 +124,12 @@ class HomeController extends Controller
 
     private function changeTest(Request $request)
     {
+
+            return 3 / 0;
+
+
+
+
         $shopId = $request->input('shop_id');
         $shop = Shop::find($shopId);
         if (is_null($shop)) {

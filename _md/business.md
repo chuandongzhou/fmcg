@@ -1101,8 +1101,7 @@
             orders 子集介绍
 
                 id                  int                 订单id
-                num                 int                 销售数量
-                pieces              int                 销售单位
+                num                 string              销售数量
 
     dispatchTruckSurplus   子集介绍
 
