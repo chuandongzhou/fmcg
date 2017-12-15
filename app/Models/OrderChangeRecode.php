@@ -33,7 +33,7 @@ class OrderChangeRecode extends Model
     /**
      * 用户
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function user()
     {
@@ -43,7 +43,7 @@ class OrderChangeRecode extends Model
     /**
      * 配送员
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function deliveryMan()
     {
@@ -51,9 +51,19 @@ class OrderChangeRecode extends Model
     }
 
     /**
+     * 子帐号
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function childUser()
+    {
+        return $this->belongsTo(ChildUser::class, 'user_id');
+    }
+
+    /**
      * 仓管
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function warehouseKeeper()
     {

@@ -108,7 +108,6 @@ class DispatchTruckController extends Controller
             return $this->error('商品库存不足');
         }
 
-
         DB::beginTransaction();
         try {
             $visit = $salesman->visits()->create([
@@ -193,10 +192,17 @@ class DispatchTruckController extends Controller
     public function detail($dispatchId)
     {
         $salesmanUser = salesman_auth()->user();
-        $dispatchTruck = DispatchTruck::with('deliveryMans', 'truck', 'salesman',
+        $dispatchTruck = DispatchTruck::with([
+            'deliveryMans',
+            'truck',
+            'salesman',
             'salesmanVisitOrder.goods.goodsPieces',
             'salesmanVisitOrder.gifts.goodsPieces',
-            'truckSalesGoods.goodsPieces')->find($dispatchId);
+            'truckSalesGoods' => function ($query) {
+                $query->where('surplus', '>', 0);
+            },
+            'truckSalesGoods.goodsPieces',
+        ])->find($dispatchId);
 
         if (Gate::forUser($salesmanUser)->denies('validate-salesman-dispatch-truck', $dispatchTruck)) {
             return $this->error('车销单不存在');
@@ -223,7 +229,12 @@ class DispatchTruckController extends Controller
     public function dispatchGoods($dispatchId)
     {
         $salesmanUser = salesman_auth()->user();
-        $dispatchTruck = DispatchTruck::with('truckSalesGoods.goodsPieces')->find($dispatchId);
+        $dispatchTruck = DispatchTruck::with([
+            'truckSalesGoods' => function ($query) {
+                $query->where('surplus', '>', 0);
+            },
+            'truckSalesGoods.goodsPieces'
+        ])->find($dispatchId);
 
         if (Gate::forUser($salesmanUser)->denies('validate-salesman-dispatch-truck', $dispatchTruck)) {
             return $this->error('车销单不存在');
@@ -313,7 +324,7 @@ class DispatchTruckController extends Controller
 
             if (!empty($orders = array_values(array_get($item, 'orders', [])))) {
 
-                foreach ($orders as $key =>$data) {
+                foreach ($orders as $key => $data) {
                     $orders[$key]['num'] = $this->_convertGoodsNum($item['goods_pieces'], $data['num']);
                 }
                 $item['orders'] = $orders;
@@ -474,14 +485,14 @@ class DispatchTruckController extends Controller
      * @param $dispatchTruckId
      * @return bool
      */
-    private function _addPlatformOrder($salesmanVisitOrder, Salesman $salesman,$dispatchTruckId)
+    private function _addPlatformOrder($salesmanVisitOrder, Salesman $salesman, $dispatchTruckId)
     {
         $syncConf = cons('salesman.order.sync');
         $orderConf = cons('order');
         $shippingAddressService = new ShippingAddressService();
         $orderData = [
             'dispatch_truck_id' => $dispatchTruckId,
-            'delivery_finished_at'  => Carbon::now(),
+            'delivery_finished_at' => Carbon::now(),
             'user_id' => $salesmanVisitOrder->customer_user_id,
             'shop_id' => $salesman->shop_id,
             'price' => $salesmanVisitOrder->amount,
