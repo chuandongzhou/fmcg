@@ -53,11 +53,12 @@ class HomeController extends Controller
 
     public function test(Request $request)
     {
-        try {
-            $a = $this->changeTest($request);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
+       /*$order = Order::with('orderGoods')->find(894);
+
+       $result = app('uline.pay')->pay($order);
+
+       dd($result);*/
+
 
         dd('test');
         return view('index.index.test');

@@ -154,6 +154,7 @@ return [
         \WeiHeng\Recharge\Pushbox\PushboxServiceProvider::class,
         \WeiHeng\OrderDownload\OrderDownloadServiceProvider::class,
         \WeiHeng\UnionPay\UnionPayServiceProvider::class,
+        WeiHeng\ULinePay\ULinePayServiceProvider::class,
         \Intervention\Image\ImageServiceProvider::class,
         \Maatwebsite\Excel\ExcelServiceProvider::class,
         \Riverslei\Pusher\PusherServiceProvider::class,
