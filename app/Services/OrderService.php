@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\DispatchTruckReturnOrder;
 use App\Models\Order;
 use App\Models\OrderGoods;
+use App\Models\SalesmanCustomerDisplaySurplus;
 use App\Models\SalesmanVisitOrder;
 use Carbon\Carbon;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
@@ -193,7 +194,34 @@ class OrderService extends BaseService
      */
     public function backDisplayFee(SalesmanVisitOrder $order)
     {
-        return $order->displayList()->delete();
+        $displayList = $order->displayList;
+
+        if ($displayList->isEmpty()) {
+            return true;
+        }
+
+        $result = DB::transaction(function () use ($displayList) {
+            foreach ($displayList as $item) {
+                $salesmanCustomerId = $item->salesman_customer_id;
+                $month = $item->month;
+                $mortgageGoodsId = $item->mortgage_goods_id;
+                $used = $item->used;
+                if ($item->delete()) {
+                    $salesmanCustomerDisplayPlus = SalesmanCustomerDisplaySurplus::where([
+                        'salesman_customer_id' => $salesmanCustomerId,
+                        'month' => $month,
+                        'mortgage_goods_id' => $mortgageGoodsId
+                    ])->first();
+                    if (!is_null($salesmanCustomerDisplayPlus)) {
+                        $salesmanCustomerDisplayPlus->increment('surplus', $used);
+                    }
+                }
+            }
+            return 'SUCCESS';
+        });
+
+
+        return $result === 'SUCCESS';
     }
 
     /**
@@ -382,7 +410,8 @@ class OrderService extends BaseService
      * @param $order
      * @return bool
      */
-    public function orderComplete($order){
+    public function orderComplete($order)
+    {
         $inventoryService = new InventoryService();
 
         if ($order->pay_type == cons('pay_type.pick_up')) {
@@ -399,8 +428,13 @@ class OrderService extends BaseService
         }
         $nowTime = Carbon::now();
 
-        if ($order->fill(['pay_status' => cons('order.pay_status.payment_success'), 'paid_at' => $nowTime, 'status' => cons('order.status.finished'), 'finished_at' => $nowTime])->save()) {
-           return true;
+        if ($order->fill([
+            'pay_status' => cons('order.pay_status.payment_success'),
+            'paid_at' => $nowTime,
+            'status' => cons('order.status.finished'),
+            'finished_at' => $nowTime
+        ])->save()) {
+            return true;
         }
         $this->setError('确认收款时出现问题');
         return false;

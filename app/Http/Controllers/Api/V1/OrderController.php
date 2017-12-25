@@ -519,7 +519,10 @@ class OrderController extends Controller
             $orderService = new OrderService();
             //返还陈列费
             if ($order->salesmanVisitOrder) {
-                $orderService->backDisplayFee($order->salesmanVisitOrder);
+                $result = $orderService->backDisplayFee($order->salesmanVisitOrder);
+                if (!$result) {
+                    throw new \Exception('返还陈列费时出错');
+                }
             }
             $orderService->backCoupon($order);
             $orderService->addOperateRecord($order, $order->shop_id, $order->shop_name, '店铺', '作废订单');
