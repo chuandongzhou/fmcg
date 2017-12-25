@@ -1005,7 +1005,7 @@ body,
 
 .menu-list-wrap .list-item .icon {
   display: inline-block;
-  background: url("images/mobile-images/menu_icons.png") top center no-repeat;
+  background: url("../images/mobile-images/menu_icons.png") top center no-repeat;
   background-size: 75%;
   width: 60px;
   height: 60px;

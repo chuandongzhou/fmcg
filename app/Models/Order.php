@@ -95,7 +95,7 @@ class Order extends Model
     /**
      * 该订单下所有商品
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function applyPromo()
     {
@@ -125,7 +125,7 @@ class Order extends Model
     /**
      * 订单退款信息
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function orderReason()
     {
@@ -231,7 +231,7 @@ class Order extends Model
     /**
      * 关联发车单
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function dispatchTruck()
     {

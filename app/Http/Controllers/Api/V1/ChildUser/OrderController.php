@@ -210,7 +210,8 @@ class OrderController extends Controller
             return $this->error('配送人员错误');
         }
 
-        $orders = Order::ofSell(child_auth()->user()->shop_id)->with('orderGoods')->useful()->whereIn('id', $orderIds)->get();
+        $orders = Order::ofSell(child_auth()->user()->shop_id)->with('orderGoods')->useful()->whereIn('id',
+            $orderIds)->get();
 
         if ($orders->isEmpty()) {
             return $this->error('订单不能为空');
@@ -392,7 +393,7 @@ class OrderController extends Controller
         $attributes = $request->all();
 
         $orderService = new OrderService;
-        $flag = $orderService->changeOrder($order, $attributes, auth()->id(),'user');
+        $flag = $orderService->changeOrder($order, $attributes, child_auth()->id(), 'childUser');
 
         return $flag ? $this->success('修改成功') : $this->error($orderService->getError());
     }

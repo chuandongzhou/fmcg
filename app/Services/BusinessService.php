@@ -2,16 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Goods;
-use App\Models\MortgageGoods;
+
 use App\Models\SalesmanCustomer;
 use App\Models\SalesmanCustomerDisplayList;
 use App\Models\SalesmanCustomerDisplaySurplus;
-use App\Models\SalesmanVisit;
 use App\Models\SalesmanVisitGoodsRecord;
 use App\Models\SalesmanVisitOrder;
 use App\Models\Shop;
-use Carbon\Carbon;
 
 /**
  * Created by PhpStorm.

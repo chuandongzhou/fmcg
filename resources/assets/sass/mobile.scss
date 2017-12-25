@@ -820,7 +820,7 @@ a {
     text-align: center;
     .icon {
       display: inline-block;
-      background: url("images/mobile-images/menu_icons.png") top center no-repeat;
+      background: url("../images/mobile-images/menu_icons.png") top center no-repeat;
       background-size: 75%;
       @include square(60px);
       &.jiushui {

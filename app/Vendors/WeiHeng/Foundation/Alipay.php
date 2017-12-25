@@ -117,8 +117,8 @@ function paraFilter($para)
 /**
  * 对数组排序
  *
- * @param $para 排序前的数组
- * return 排序后的数组
+ * @param $para
+ * @return mixed
  */
 function argSort($para)
 {

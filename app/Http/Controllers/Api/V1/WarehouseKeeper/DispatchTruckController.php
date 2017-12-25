@@ -555,7 +555,6 @@ class DispatchTruckController extends Controller
      */
     public function confirmTruckBack($dtv_id)
     {
-
         $dtv = DispatchTruck::find($dtv_id);
         if (!$dtv || $dtv->status > cons('dispatch_truck.status.delivering')) {
             return $this->error('发车单错误或已回车!');
@@ -656,22 +655,17 @@ class DispatchTruckController extends Controller
      */
     public function salesmanList()
     {
-        return wk_auth()->user()->shop->salesmen()->with('dispatchTrucks')->select([
+        return  wk_auth()->user()->shop->salesmen()->where('maker_id', null)->with('dispatchTrucks')->select([
             'id',
             'name',
             'shop_id',
             'contact_information'
         ])->get()->each(function ($salesman) {
-            $salesman->delivery_status = 1;
+            $salesman->delivery_status = $salesman->dispatchTrucks->isEmpty() || $salesman->dispatchTrucks->filter(function ($item) {
+                return $item->status < cons('dispatch_truck.status.backed');
+            })->count() == 0 ? 1 : 0;
+
             $salesman->addHidden(['dispatchTrucks']);
-            if ($salesman->dispatchTrucks) {
-                foreach ($salesman->dispatchTrucks as $dispatchTruck) {
-                    if ($dispatchTruck->status < cons('dispatch_truck.status.backed')) {
-                        $salesman->delivery_status = 0;
-                        break;
-                    }
-                }
-            };
         });
     }
 

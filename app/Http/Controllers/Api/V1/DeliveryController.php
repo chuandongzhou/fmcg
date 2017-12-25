@@ -498,7 +498,10 @@ class DeliveryController extends Controller
             $orderService->backCoupon($order);
             //返还陈列费
             if ($order->salesmanVisitOrder) {
-                $orderService->backDisplayFee($order->salesmanVisitOrder);
+                $result = $orderService->backDisplayFee($order->salesmanVisitOrder);
+                if (!$result) {
+                    throw new \Exception('返还陈列费时出错');
+                }
             }
             $inventoryService = new InventoryService();
             $inventoryService->clearOut($order->id);
