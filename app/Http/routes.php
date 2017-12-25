@@ -175,6 +175,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('delivery-report', 'DeliveryController@report');
         $router->controller('model', 'ModelController');  //模版管理
         $router->get('dispatch-truck', 'DispatchTruckController@index');  //发车单
+        $router->get('dispatch-truck/detail/{dispatch_truck}', 'DispatchTruckController@getDetail');  //发车单
         $router->resource('coupon', 'CouponController'); // 优惠券
         $router->controller('sign', 'SignController'); //签约管理
         $router->resource('child-user', 'ChildUserController'); //子帐号
@@ -279,7 +280,8 @@ $router->group(['prefix' => 'child-user', 'namespace' => 'ChildUser', 'middlewar
         $router->get('report/{salesman_id}/customer-detail/export', 'ReportController@exportCustomerDetail');
         $router->get('report/export', 'ReportController@exportIndex');
         $router->resource('report', 'ReportController');
-        $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
+        $router->resource/*post？*/
+        ('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
         $router->resource('salesman-customer', 'SalesmanCustomerController');
         $router->group(['prefix' => 'business-order'], function ($router) {
             $router->get('export', 'SalesmanVisitOrderController@export');
@@ -441,6 +443,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->post('import', 'MyGoodsController@import');
             $router->get('goods', 'MyGoodsController@goods');
         });
+        $router->get('customers', 'Business\SalesmanCustomerController@getCustomers'); //获取客户们
+        $router->get('my-goods/gifts', 'MyGoodsController@gifts');
         $router->resource('my-goods', 'MyGoodsController');
         $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
             $router->group(['prefix' => 'security'], function ($router) {
@@ -808,7 +812,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             }
         );
 
-        $router->put('warehouse-keeper/status/{warehouse_keeper}', 'warehouseKeeperController@status')->where('warehouse_keeper', '[0-9]+');
+        $router->put('warehouse-keeper/status/{warehouse_keeper}',
+            'warehouseKeeperController@status')->where('warehouse_keeper', '[0-9]+');
         $router->resource('warehouse-keeper', 'WarehouseKeeperController', ['only' => ['store', 'update', 'destroy']]);
     });
 });

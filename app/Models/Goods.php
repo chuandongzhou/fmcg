@@ -374,8 +374,6 @@ class Goods extends Model
     {
         if ($nameOrCode) {
             return $query->where(function ($query) use ($nameOrCode) {
-
-
                 $query->where('name', 'LIKE', '%' . $nameOrCode . '%');
                 $query->orWhere('bar_code', 'LIKE', '%' . $nameOrCode . '%');
             });
@@ -582,6 +580,22 @@ class Goods extends Model
         }
         return $piecesList;
     }
+
+    /**
+     * 获取单位列表字符串
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getPiecesLangListAttribute()
+    {
+        $pieces = $this->getPiecesListAttribute();
+        $piecesLangList = collect([]);
+        foreach ($pieces as $item) {
+            $piecesLangList->push(cons()->valueLang('goods.pieces', $item));
+        }
+        return $piecesLangList;
+    }
+   
 
     /**
      * 根据不同角色获取规格
@@ -800,5 +814,32 @@ class Goods extends Model
                 $this->warning_piece);
         $surplus = $this->getTotalInventoryAttribute();
         return intval($surplus) < intval($warning);
+    }
+
+    /**
+     * 获取成本价提示字符串
+     *
+     * @return string
+     */
+    public function getCostTipsAttribute()
+    {
+        switch (auth()->user()->type) {
+            case cons('user.type.wholesaler'):
+                $tips = bcadd($this->price_retailer, 0, 2) . '/' . cons()->valueLang('goods.pieces',
+                        $this->pieces_retailer) . '(终端)';
+                break;
+            case cons('user.type.supplier'):
+                $tips = bcadd($this->price_retailer, 0, 2) . '/' . cons()->valueLang('goods.pieces',
+                        $this->pieces_retailer) . '(终端)' . '&nbsp&nbsp' . bcadd($this->price_wholesaler, 0,
+                        2) . '/' . cons()->valueLang('goods.pieces', $this->pieces_wholesaler) . '(批发)';
+                break;
+            case cons('user.type.maker'):
+                $tips = bcadd($this->price_retailer, 0, 2) . '/' . cons()->valueLang('goods.pieces',
+                        $this->pieces_retailer) . '(供应)';
+                break;
+            default :
+                $tips = '';
+        }
+        return $tips;
     }
 }

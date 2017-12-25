@@ -46,6 +46,22 @@ class SalesmanCustomerController extends Controller
     }
 
     /**
+     * 获取所有客户
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getCustomers(Request $request)
+    {
+        $shop = auth()->user()->shop;
+        $customers = $shop->salesmenCustomer()->ofName($request->input('name'))->with('address')->paginate();
+        $customers->each(function ($customer) {
+            $customer->setAppends(['shipping_address_name']);
+            $customer->addHidden(['address']);
+        });
+        return $this->success($customers);
+    }
+
+    /**
      * 添加客户(业务员添加/店家添加)
      *
      * @param \App\Http\Requests\Api\v1\CreateSalesmanCustomerRequest $request

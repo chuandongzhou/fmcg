@@ -65,7 +65,7 @@
                                         @if(auth()->user()->type < cons('user.type.maker'))<b
                                                 class="red">{{ $man->orderFormSumAmount }}</b>@endif
 
-                                        ({{ $man->visitOrderFormSumAmount . '+' . (abs($man->orderFormSumAmount - $man->visitOrderFormSumAmount)) }})
+                                        ({{ $man->visitOrderFormSumAmount . '+' . (abs(bcsub($man->orderFormSumAmount , $man->visitOrderFormSumAmount,2))) }})
                                     </td>
                                     <td>{{ $man->deliveryFinishCount }}</td>
                                     <td>{{ $man->finishedAmount }}</td>

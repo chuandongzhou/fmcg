@@ -55,7 +55,8 @@ return [
         'type' => [
             'platform' => '自主订单',
             'business' => '业务订单',
-            'dispatch_truck' => '车销订单'
+            'dispatch_truck' => '车销订单',
+            'replace' => '代下单'
         ],
         'is_cancel' => [//订单是否被取消
             'off' => '未取消',
@@ -426,6 +427,10 @@ return [
             'wait' => '等待发车',
             'delivering' => '已发车',
             'backed' => '已回车'
+        ],
+        'type' => [
+            'dispatch' => '配送',
+            'sales' => '车销'
         ]
     ]
 ];

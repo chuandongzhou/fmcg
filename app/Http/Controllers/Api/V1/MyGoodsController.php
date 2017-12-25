@@ -22,7 +22,6 @@ use ExcelImport;
 
 class MyGoodsController extends Controller
 {
-
     public function index(Request $request)
     {
         $data = $request->all();
@@ -30,7 +29,16 @@ class MyGoodsController extends Controller
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->with('goodsLike')->orderBy('id', 'DESC')->paginate();
         $goods->each(function ($goods) {
-            $goods->setAppends(['like_amount', 'image_url', 'pieces', 'price'])->setHidden(['goods_like']);
+            $goods->setAppends([
+                'cost_tips',
+                'surplus_inventory',
+                'pieces_list',
+                'pieces_lang_list',
+                'like_amount',
+                'image_url',
+                'pieces',
+                'price'
+            ])->setHidden(['goods_like', 'goodsPieces']);
         });
         return $this->success([
             'goods' => $goods->toArray(),
@@ -38,6 +46,33 @@ class MyGoodsController extends Controller
         ]);
     }
 
+    /**
+     * 获取所有赠品
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function gifts(Request $request)
+    {
+        $shop = auth()->user()->shop;
+
+        $gifts = $shop->goods()->active()
+            ->ofNameOrCode($request->input('nameOrCode'))
+            ->where('is_gift', 1)->with('goodsPieces')->select([
+                'id',
+                'name',
+                'bar_code',
+                'price_retailer',
+                'pieces_retailer',
+                'price_wholesaler',
+                'pieces_wholesaler',
+            ])->get();
+        $gifts->each(function ($item) {
+            $item->addHidden(['images', 'goodsPieces', 'price', 'inventory']);
+            $item->setAppends(['pieces_list','cost_tips', 'surplus_inventory', 'pieces_lang_list']);
+        });
+        return $this->success($gifts->toArray());
+    }
 
     /**
      * 获取商品for商品弹出窗
@@ -566,7 +601,8 @@ class MyGoodsController extends Controller
             }
         }
         if (!in_array($goods['pieces_retailer'], $pieces) || (array_get($goods,
-                    'pieces_wholesaler') && !in_array($goods['pieces_wholesaler'], $pieces))) {
+                    'pieces_wholesaler') && !in_array($goods['pieces_wholesaler'], $pieces))
+        ) {
             return '单位编号不正确请检查!';
         }
         if (!empty($pieces['pieces_level_2']) && empty($pieces['system_1'])) {

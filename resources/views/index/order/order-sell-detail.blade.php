@@ -76,7 +76,7 @@
                                         <thead>
                                         <th>订单号</th>
                                         <th>订单金额</th>
-                                        <th>{{ $order->type==cons('order.type.business') ? '陈列费' :  '优惠券' }}</th>
+                                        <th>{{ $order->type == cons('order.type.platform') ? '优惠券' :  '陈列费' }}</th>
                                         <th>应付金额</th>
                                         <th>支付方式</th>
                                         <th>订单状态</th>

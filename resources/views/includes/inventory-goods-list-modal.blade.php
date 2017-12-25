@@ -62,12 +62,12 @@
 
             inventory_search = function () {
                 nameOrCode = $('input[name = nameOrCode]').val();
-                paginate(1,{'nameOrCode':nameOrCode})
+                paginate(1, {'nameOrCode': nameOrCode})
             };
 
             chooseSubmit = function () {
                 tbody.find($(".goods:checked")).each(function () {
-                    if($(this).prop('disabled')){
+                    if ($(this).prop('disabled')) {
                         return
                     }
                     var img_url = $(this).next().next($('input[name=image_url]')).data('image_url');
@@ -81,6 +81,9 @@
                     var goods_name = $(this).next().next().next($('input[name=name]')).data('name');
                     var goods_detail_url = window.location.protocol + '//' + window.location.host + '/goods/' + $(this).val();
                     var name_prefix = 'goods[' + $(this).val() + ']';
+
+                    var cost_tips = $(this).next().next().next().next('input[name=cost-tips]').data('cost_tips');
+                    var surplus_inventory = $(this).next().next().next().next().next($('input[name=surplus-iventory]')).data('surplus_inventory');
 
                     var tr = $('tr.inventory-template:eq(0)').clone().removeClass('modal');
                     tr.find('input[name=ids]').val($(this).val());
@@ -101,6 +104,8 @@
                     }
                     tr.find('select').attr('name', name_prefix + '[pieces][0]').html(option);
                     tr.find('input.cost').attr('name', name_prefix + '[cost][0]');
+                    tr.find('span.cost-tips').html(cost_tips);
+                    tr.find('span.surplus-inventory').html('剩余库存: ' + surplus_inventory);
                     tr.find('input.inventory').attr('name', name_prefix + '[quantity][0]');
                     tr.find('textarea').attr('name', name_prefix + '[remark][0]');
                     choosedGoodsList.append(tr);
@@ -108,15 +113,15 @@
                 });
             };
 
-            function paginate(page,data) {
+            function paginate(page, data) {
                 var page = page || 1,
                         nameOrCode = $('input[name = nameOrCode]').val(),
-                        data = data || {'nameOrCode':nameOrCode};
+                        data = data || {'nameOrCode': nameOrCode};
                 $('.page ul li').prop('disabled', true);
                 $.ajax({
                     url: site.api('inventory/goods-list?page=' + page),
                     method: 'get',
-                    data : data
+                    data: data
                 }).done(function (data) {
                     makeHtml(data)
                 });
@@ -133,7 +138,7 @@
                     alert('您的店铺还未添加商品');
                     return false;
                 }
-                $('input#parent').attr('checked',false);
+                $('input#parent').attr('checked', false);
                 //添加分页html
                 //前一页
                 if (currentPage == 1) {
@@ -208,9 +213,9 @@
                 for (var i = 0; i < allGoods.length; i++) {
                     var exist = $.inArray(String(allGoods[i].id), ids);
                     html += '<tr><td>';
-                    if(exist >= 0){
+                    if (exist >= 0) {
                         html += '已添加'
-                    }else{
+                    } else {
                         html += '<input name="ids" class="goods" type="checkbox" value=' + allGoods[i].id + '>';
                     }
                     html += '<input name="pieces" ' +
@@ -223,6 +228,8 @@
                             'type="hidden">';
                     html += '<input name="image_url" type="hidden" data-image_url=' + allGoods[i].image_url + '>';
                     html += '<input name="name" type="hidden" data-name=' + allGoods[i].name + '>';
+                    html += '<input name="cost-tips" type="hidden" data-cost_tips=' + allGoods[i].cost_tips + '>';
+                    html += '<input name="surplus-inventory" type="hidden" data-surplus_inventory=' + allGoods[i].surplus_inventory + '>';
                     html += '</td>'
                     html += '<td data-name=' + allGoods[i].name + '>' + allGoods[i].name + '</td>';
                     html += '<td data-bar_code=' + allGoods[i].bar_code + '>' + allGoods[i].bar_code + '</td>'

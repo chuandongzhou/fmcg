@@ -168,24 +168,24 @@ class DeliveryController extends Controller
             'returnOrders.goods.goodsPieces',
             'truckSalesGoods.goodsPieces',
             'truckSalesGoods' => function ($goods) {
-                $goods->select(['id', 'name']);
+                $goods->select(['id','surplus', 'name'])->where('surplus','>','0');
             }
         ];
         $dtv = delivery_auth()->user()->dispatchTruck()->with($with)
             ->where('status', cons('dispatch_truck.status.delivering'))->first();
         if (!$dtv) {
-            return $this->error('没有找到数据');
+            return $this->error('当前无配送订单!');
         }
         $dtv->addHidden(['returnOrders']);
         $dtv->setAppends(['status_name']);
+        $dtv->truckSalesGoods->each(function ($goods) {
+            $goods->surplus_string = InventoryService::calculateQuantity($goods, $goods->pivot->surplus);
+        });
         foreach ($dtv->orders as $order) {
             $order->addHidden(['orderGoods', 'salesmanVisitOrder']);
             $order->shippingAddress->setAppends(['address_name']);
             $order->shippingAddress->addHidden(['address']);
         };
-        $dtv->truckSalesGoods->each(function ($goods) {
-            $goods->surplus_string = InventoryService::calculateQuantity($goods, $goods->pivot->surplus);
-        });
         $dtv->order_goods_statis = DispatchTruckService::goodsStatistical($dtv->orders);
         $dtv->return_order_goods_statis = DispatchTruckService::returnOrderGoodsStatistical($dtv->returnOrders ?? []);
         return $this->success($dtv->toArray());

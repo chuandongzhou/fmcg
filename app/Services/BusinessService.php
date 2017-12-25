@@ -518,9 +518,12 @@ class BusinessService extends BaseService
                 if ($item->mortgage_goods_id == $mortgage->id) {
                     $surplus[] = [
                         'id' => $mortgage->id,
+                        'goods_id' => $mortgage->goods_id,
+                        'img_url' => $mortgage->goods->image_url,
                         'name' => $mortgage->goods_name,
                         'surplus' => (int)$item->surplus,
-                        'pieces_name' => $mortgage->pieces_name
+                        'pieces_name' => $mortgage->pieces_name,
+                        'pieces' => $mortgage->pieces
                     ];
                     $flag = true;
                     break;
@@ -529,9 +532,12 @@ class BusinessService extends BaseService
             if (!$flag) {
                 $surplus[] = [
                     'id' => $mortgage->id,
+                    'goods_id' => $mortgage->goods_id,
+                    'img_url' => $mortgage->goods->image_url,
                     'name' => $mortgage->goods_name,
                     'surplus' => (int)$mortgage->pivot->total,
-                    'pieces_name' => $mortgage->pieces_name
+                    'pieces_name' => $mortgage->pieces_name,
+                    'pieces' => $mortgage->pieces
                 ];
             }
 
@@ -567,7 +573,7 @@ class BusinessService extends BaseService
                     'mortgage_goods_id' => 0
                 ])->pluck('used');
             }
-            if ($item > bcadd($customerSurplus, $orderDisplayFee, 2)) {
+            if ($item > bcsub($customerSurplus, $orderDisplayFee, 2)) {
                 $this->setError('陈列费不能高于选择月份余额');
                 return false;
             }
@@ -629,7 +635,7 @@ class BusinessService extends BaseService
                     }
                 }
                 if (!$flag) {
-                    $this->setError('抵费商品不存在');
+                    $this->setError('抵费商品不存在'.$item['id']);
                     return false;
                 }
             }

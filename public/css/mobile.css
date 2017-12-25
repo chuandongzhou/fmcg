@@ -763,6 +763,9 @@ body,
 .reg-container .edit-wrap .item .update-img a {
   display: inline-block;
   position: relative;
+  width: 35px;
+  height: 35px;
+  vertical-align: middle;
 }
 
 .reg-container .edit-wrap .item .update-img a input[type=file] {

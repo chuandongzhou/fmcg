@@ -15,7 +15,8 @@
 
             <div class="row delivery-statistics">
                 <div class="col-sm-12 operation">
-                    <a href="javascript:" onclick="window.history.back()" class="btn btn-border-blue"><i class="iconfont icon-fanhui"></i>返回</a>
+                    <a href="javascript:" onclick="window.history.back()" class="btn btn-border-blue"><i
+                                class="iconfont icon-fanhui"></i>返回</a>
                     <a href="{{ url('personal/delivery-report?'.  http_build_query($search)) }}"
                        class="btn btn-border-blue">下载打印</a>
                 </div>

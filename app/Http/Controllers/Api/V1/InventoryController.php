@@ -76,6 +76,7 @@ class InventoryController extends Controller
                 $item->goodsPieces->pieces_level_2);
             $item->goodsPieces->pieces_level_3_lang = cons()->valueLang('goods.pieces',
                 $item->goodsPieces->pieces_level_3);
+            $item->setAppends(['cost_tips', 'surplus_inventory']);
         });
         return $this->success([
             'goods' => $goods->toArray(),

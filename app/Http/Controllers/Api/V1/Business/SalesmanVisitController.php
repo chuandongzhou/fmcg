@@ -164,8 +164,6 @@ class SalesmanVisitController extends Controller
                         if (isset($validate) && $customer->display_type != cons('salesman.customer.display_type.no')) {
                             $this->_addDisplayList($validate, $orderForm);
                         }
-
-
                     }
                 }
                 if (isset($result['order']['return_order'])) {
@@ -304,7 +302,8 @@ class SalesmanVisitController extends Controller
             })->get();
         return $this->success([
             'surplus' => (new BusinessService())->surplusDisplayFee($customer, $month),
-            'noConfirm' => $noConfirm
+            'noConfirm' => $noConfirm,
+            'noConfirmSum' => $noConfirm->sum('used'),
         ]);
     }
 

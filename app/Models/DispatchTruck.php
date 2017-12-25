@@ -96,7 +96,7 @@ class DispatchTruck extends Model
         return $this->belongsToMany('App\Models\Goods', 'truck_sales_goods',
             'dispatch_truck_id')->withPivot(['quantity', 'pieces', 'surplus']);
     }
-    
+
 
     /**
      * 关联货车
@@ -211,6 +211,16 @@ class DispatchTruck extends Model
     public function getSalesmanNameAttribute()
     {
         return $this->salesman->name ?? '';
+    }
+
+    /**
+     * 获取业务员名
+     *
+     * @return string
+     */
+    public function getTypeNameAttribute()
+    {
+        return cons()->valueLang('dispatch_truck.type', $this->type);
     }
 
 }

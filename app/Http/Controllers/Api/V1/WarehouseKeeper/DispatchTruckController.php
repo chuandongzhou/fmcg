@@ -325,7 +325,7 @@ class DispatchTruckController extends Controller
             'returnOrders.goods.goodsPieces',
             'truckSalesGoods.goodsPieces',
             'truckSalesGoods' => function ($goods) {
-                $goods->select(['id', 'name']);
+                $goods->select(['id', 'surplus', 'name'])->where('surplus', '>', 0)->orderBy('id', 'DESC');
             }
         ];
         $dtv = null;
@@ -356,6 +356,7 @@ class DispatchTruckController extends Controller
         });
         $dtv->order_goods_statis = DispatchTruckService::goodsStatistical($dtv->orders);
         $dtv->return_order_goods_statis = DispatchTruckService::returnOrderGoodsStatistical($dtv->returnOrders ?? []);
+
         return $this->success($dtv->toArray());
     }
 

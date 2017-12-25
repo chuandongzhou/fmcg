@@ -1732,6 +1732,15 @@ var stripTags = function (str, allow) {
         return allow.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
     });
 };
+
+var tdTips = function () {
+    $("body").on("focus", ".new-col .number", function () {
+        $(this).siblings(".tips").css("display", "block");
+    })
+    $("body").on("blur", ".new-col .number", function () {
+        $(this).siblings(".tips").css("display", "none");
+    })
+}
 /**
  * 获取数组keys
  * @param arr
@@ -1743,7 +1752,7 @@ var arrayKeys = function (arr) {
         keys.push(index);
     }
     return keys;
-}
+};
 //获取商品单位
 var getGoodsPieces = function (goodsId, defaultPieces) {
     $.get(site.api('goods/goods-pieces/' + goodsId), '', function (data) {

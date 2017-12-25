@@ -33,11 +33,12 @@
                     <table class="table table-bordered table-center public-table">
                         <thead>
                         <tr>
-                            <th>发车单号</th>
+                            <th>类型</th>
+                            <th>单号</th>
                             <th>车辆名称</th>
                             <th>车牌号</th>
                             <th>配送人</th>
-                            <th>配送订单单数</th>
+                            <th>配送单数</th>
                             <th>发车时间</th>
                             <th>状态</th>
                             <th>操作</th>
@@ -46,11 +47,12 @@
                         <tbody>
                         @foreach($dispatchTrucks as $dispatchTruck)
                             <tr>
+                                <td>{{$dispatchTruck->type_name}}</td>
                                 <td>{{$dispatchTruck->id}}</td>
                                 <td>{{$dispatchTruck->truck->name ?? ''}}</td>
                                 <td>{{$dispatchTruck->truck->license_plate ?? ''}}</td>
                                 <td>{!! implode("|",array_column($dispatchTruck->deliveryMans->toArray(), 'name')) !!}</td>
-                                <td>{{$dispatchTruck->orders->count()}}</td>
+                                <td>{{$dispatchTruck->orderCount}}</td>
                                 <td>{{$dispatchTruck->dispatch_time}}</td>
                                 <td>{{$dispatchTruck->status_name}}</td>
                                 <td><a href="{{url('personal/dispatch-truck/detail').'/'.$dispatchTruck->id}}"><i

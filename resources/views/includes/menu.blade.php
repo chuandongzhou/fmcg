@@ -101,6 +101,11 @@
                                     <span class="title">订单打印模版</span>
                                 </a>
                             </li>
+                            <li class="nav-item  {{ request()->is('order-sell/replace')? 'active' : '' }}">
+                                <a href="{{ url('order-sell/replace') }}" class="nav-link ">
+                                    <span class="title">代下单</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif
@@ -203,11 +208,11 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {!! path_active(['personal/deliver*']) !!}">
+                <li class="nav-item {!! path_active(['personal/deliver*','personal/delivery-truck*','personal/dispatch-truck*']) !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-shopping-basket"></i>
                         <span class="title">配送管理</span>
-                        <span class="{!! request()->is('personal/delivery*') ? 'selected' : ''  !!}"></span>
+                        <span class="{!! request()->is('personal/delivery*','personal/dispatch-truck*') ? 'selected' : ''  !!}"></span>
                         <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
@@ -415,11 +420,11 @@
 
                     @if( true || $user->deposit && !$user->is_expire)
                         {{-- 配送管理 --}}
-                        <li class="nav-item {!! path_active(['personal/delivery*','personal/delivery-statistical']) !!}">
+                        <li class="nav-item {!! path_active(['personal/delivery*','personal/delivery-statistical','personal/dispatch-truck*']) !!}">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="fa fa-shopping-basket"></i>
                                 <span class="title">配送管理</span>
-                                <span class="{!! request()->is('personal/delivery*','personal/delivery-man*')?'selected':''  !!}"></span>
+                                <span class="{!! request()->is('personal/delivery*','personal/delivery-man*','personal/dispatch-truck*')?'selected':''  !!}"></span>
                                 <span class="arrow open"></span>
                             </a>
                             <ul class="sub-menu">

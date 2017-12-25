@@ -14,7 +14,8 @@
                 </div>
             </div>
             <form class="form-horizontal ajax-form" method="post"
-                  action="{{ url('api/v1/inventory/out-save'/*.$goods->id*/) }}" data-done-url="{{ url('inventory/out') }}"
+                  action="{{ url('api/v1/inventory/out-save'/*.$goods->id*/) }}"
+                  data-done-url="{{ url('inventory/out') }}"
                   data-help-class="col-sm-push-1 col-sm-10" data-done-then="referer"
                   autocomplete="off">
                 <div class="row delivery">
@@ -83,7 +84,8 @@
                                     </td>
                                     <td>
                                         <p class="new-col">
-                                            <input class="number cost" name="goods[{{$goods->id}}][cost][]" type="text"><span name="cost"></span>
+                                            <input class="number cost" name="goods[{{$goods->id}}][cost][]" type="text"><span
+                                                    name="cost"></span>
                                         </p>
                                     </td>
                                     <td>
@@ -121,12 +123,14 @@
                                 <td>
                                     <p class="new-col">
                                         <input class="number cost" name="" type="text">
+                                        <span class="tips cost-tips"></span>
                                     </p>
                                 </td>
                                 <td>
                                     <p class="new-col">
                                         <input class="number inventory" name="" type="text"
                                                placeholder="">
+                                        <span class="tips surplus-inventory"></span>
                                     </p>
                                 </td>
                                 <td>
@@ -162,6 +166,15 @@
                 }
                 //todo...
             };
+            body = $("body");
+
+            body.on("focus", ".new-col input.number", function () {
+                $(this).siblings(".tips").css("display", "block");
+            });
+
+            body.on("blur", ".new-col input.number", function () {
+                $(this).siblings(".tips").css("display", "none");
+            })
         })
     </script>
 @stop

@@ -553,8 +553,7 @@
 
                         <div class="col-sm-12 text-left save">
                             @if (!$goods->status)
-                                <p><input type="checkbox" name="status" value="1"> 立即上架<span class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span>
-                                </p>
+                                <p><input type="checkbox" name="status" value="1"> 立即上架<span class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></p>
                             @endif
                             <button class="btn btn-success" type="submit">提交</button>
                         </div>

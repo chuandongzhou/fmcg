@@ -67,6 +67,7 @@ class DeliveryController extends Controller
     {
         $search = $request->all();
         $data = (new DeliveryService())->deliveryStatistical($search);
+        //dd($data);
         return view('index.personal.delivery-statistical',
             ['data' => $data['delivery'], 'search' => $search, 'deliveryNum' => $data['deliveryNum']]);
     }

@@ -48,7 +48,7 @@ class OrderSellController extends OrderController
         ]);
         if (is_numeric($searchContent = array_get($search, 'search_content'))) {
             $orders = $orders->where('id', $searchContent);
-        } else{
+        } else {
             $orders = $orders->ofSelectOptions($search)->ofUserShopName($searchContent);
         }
         //已作废 、已发货、已完成、退款成功按操作时间倒序
@@ -269,4 +269,16 @@ class OrderSellController extends OrderController
         ];
         return $data;
     }
+
+    /**
+     * 代下单
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getReplace()
+    {
+        return view('index.order.order-sell-replace');
+    }
+    
+    
 }

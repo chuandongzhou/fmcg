@@ -8,20 +8,24 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Requests\Api\v1\ReplaceOrderRequest;
 use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\Goods;
 use App\Models\Order;
 use App\Models\OrderGoods;
+use App\Models\Salesman;
 use App\Models\SalesmanCustomer;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Models\Shop;
 use App\Models\ConfirmOrderDetail;
+use App\Services\BusinessService;
 use App\Services\CartService;
 use App\Services\GoodsService;
 use App\Services\InventoryService;
 use App\Services\OrderService;
 use App\Services\RedisService;
+use App\Services\ShippingAddressService;
 use App\Services\ShopService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -1136,6 +1140,252 @@ class OrderController extends Controller
         $buyer && $order->shop && $order->shop->setAppends([]);
 
         return $order;
+    }
+
+    /**
+     * @param \App\Http\Requests\Api\v1\ReplaceOrderRequest $request
+     */
+    public function postReplace(ReplaceOrderRequest $request)
+    {
+        $data = $request->all();
+
+        $customer = SalesmanCustomer::find($data['client_id']);
+
+        if (is_null($customer)) {
+            return $this->error('客户不存在');
+        }
+        if (!array_get($data, 'goods')) {
+            return $this->error('请选择商品');
+        }
+
+        $salesman = $customer->salesman;
+        $result = DB::transaction(function () use ($customer, $data, $salesman) {
+            $orderConf = cons('salesman.order');
+            if (!empty($data['goods'])) {
+                //有商品下单
+                $salesmanOrderData['salesman_customer_id'] = $data['client_id'];
+                $salesmanOrderData['order_remark'] = isset($data['order_remark']) ? $data['order_remark'] : '';
+                $salesmanOrderData['type'] = $orderConf['type']['order'];
+                $salesmanOrderData['shop_id'] = auth()->user()->shop_id;
+                $salesmanOrderData['amount'] = $data['amount'];
+                $salesmanOrderData['status'] = cons('salesman.order.status.passed');
+
+                $orderForm = $salesman->orders()->create($salesmanOrderData);
+                if ($orderForm->exists) {
+                    $orderGoodsArr = [];
+                    foreach ($data['goods'] as $goods_id => $orderGoods) {
+                        $goodsItem = [
+                            'goods_id' => $goods_id,
+                            'price' => $orderGoods['price'],
+                            'num' => $orderGoods['num'],
+                            'pieces' => $orderGoods['pieces'],
+                            'amount' => bcmul($orderGoods['price'], $orderGoods['num'], 2),
+                            'type' => $orderConf['goods']['type']['order']
+                        ];
+                        $orderGoodsArr[] = new SalesmanVisitOrderGoods($goodsItem);
+                    }
+                    //订单商品
+                    $orderForm->orderGoods()->saveMany($orderGoodsArr);
+
+                    //礼物
+                    if ($gifts = array_get($data, 'gifts')) {
+                        $orderForm->gifts()->sync($gifts);
+                    }
+
+                    $businessService = new BusinessService();
+                    //验证陈列费或抵费商品是否合法并返回结果
+                    if ($customer->display_type == cons('salesman.customer.display_type.cash') && isset($data['display_fee'])) {
+                        //验证陈列费
+                        $validate = $businessService->validateDisplayFee($data['display_fee'], $data['amount'],
+                            $customer);
+                        if (!$validate) {
+                            return $businessService->getError();
+                        }
+
+                    } elseif ($customer->display_type == cons('salesman.customer.display_type.mortgage') && isset($data['display_goods'])) {
+                        //验证陈列费抵费商品
+                        $validate = $businessService->validateMortgage($data['display_goods'], $customer);
+                        if (!$validate) {
+                            return $businessService->getError();
+                        }
+                    }
+                    //添加陈列费
+                    if (isset($validate) && $customer->display_type != cons('salesman.customer.display_type.no')) {
+                        $orderForm->displayList()->saveMany($validate);
+
+                    }
+
+                }
+                // 添加平台订单
+                $addPlatformResult = $this->_addPlatformOrder($orderForm, $salesman);
+                return $addPlatformResult === true ? 'success' : false;
+
+            }
+        });
+
+        if ($result === 'success') {
+            return $this->success('下单成功');
+        } else {
+            return $this->error(is_string($result) ? $result : '下单时出现错误');
+        }
+    }
+
+    /**
+     * 添加平台订单
+     *
+     * @param $salesmanVisitOrder
+     * @param \App\Models\Salesman $salesman
+     * @param $dispatchTruckId
+     * @return bool
+     */
+    private function _addPlatformOrder($salesmanVisitOrder, Salesman $salesman)
+    {
+        $syncConf = cons('salesman.order.sync');
+        $orderConf = cons('order');
+        $shippingAddressService = new ShippingAddressService();
+        $orderData = [
+            'dispatch_truck_id' => 0,
+            'user_id' => $salesmanVisitOrder->customer_user_id,
+            'shop_id' => $salesman->shop_id,
+            'display_fee' => $salesmanVisitOrder->display_fee_amount,
+            'price' => $salesmanVisitOrder->amount,
+            'pay_type' => $syncConf['pay_type'],
+            'pay_way' => $syncConf['pay_way'],
+            'type' => cons('order.type.replace'),
+            'status' => $orderConf['status']['non_send'],
+            'numbers' => (new OrderService())->getNumbers($salesman->shop_id),
+            'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($salesmanVisitOrder->SalesmanCustomer),
+            'remark' => ($salesmanVisitOrder->order_remark ? '订单备注:' . $salesmanVisitOrder->order_remark . ';' : '') . ($salesmanVisitOrder->display_remark ? '陈列费备注:' . $salesmanVisitOrder->display_remark : '')
+        ];
+        if (!$orderData['shipping_address_id']) {
+            return false;
+        }
+        $orderTemp = Order::create($orderData);
+        if ($orderTemp->exists) {//添加订单成功,修改orderGoods中间表信息
+            $orderGoods = [];
+            foreach ($salesmanVisitOrder->orderGoods as $goods) {
+                // 添加订单商品
+                $orderGoods[] = new OrderGoods([
+                    'goods_id' => $goods->goods_id,
+                    'price' => $goods->price,
+                    'num' => $goods->num,
+                    'pieces' => $goods->pieces,
+                    'total_price' => $goods->amount,
+                ]);
+
+                $confirmOrderDetail = ConfirmOrderDetail::where([
+                    'goods_id' => $goods->goods_id,
+                    'customer_id' => $salesmanVisitOrder->salesman_customer_id
+                ])->first();
+                if (empty($confirmOrderDetail)) {
+                    ConfirmOrderDetail::create([
+                        'goods_id' => $goods->goods_id,
+                        'price' => $goods->price,
+                        'pieces' => $goods->pieces,
+                        'shop_id' => !empty($salesmanVisitOrder->salesmanCustomer->shop_id) ? $salesmanVisitOrder->salesmanCustomer->shop_id : 0,
+                        'customer_id' => $salesmanVisitOrder->salesman_customer_id,
+                    ]);
+                } else {
+                    $confirmOrderDetail->fill(['price' => $goods->price, 'pieces' => $goods->pieces])->save();
+                }
+            }
+
+            //礼物
+            if ($gifts = $salesmanVisitOrder->gifts) {
+                foreach ($gifts as $gift) {
+                    $orderGoods[] = new OrderGoods([
+                        'type' => cons('order.goods.type.gift_goods'),
+                        'goods_id' => $gift->id,
+                        'price' => 0,
+                        'num' => $gift->pivot->num,
+                        'pieces' => $gift->pivot->pieces,
+                        'total_price' => 0,
+                    ]);
+                }
+            }
+
+            foreach ($salesmanVisitOrder->mortgageGoods as $goods) {
+                // 添加抵费商品
+                $orderGoods[] = new OrderGoods([
+                    'type' => cons('order.goods.type.mortgage_goods'),
+                    'goods_id' => $goods->goods_id,
+                    'price' => 0,
+                    'num' => $goods->pivot->used,
+                    'pieces' => $goods->pieces,
+                    'total_price' => 0,
+                ]);
+            }
+
+            if (!empty($orderGoods)) {
+                //保存抵费商品
+                if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
+                    return ['error' => '同步时出现错误，请重试'];
+                }
+            }
+
+            $this->_updateDisplay([$salesmanVisitOrder]);
+
+            if (!empty($orderGoods)) {
+                //保存抵费商品
+                if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
+                    return false;
+                }
+            }
+            if (!$salesmanVisitOrder->fill(['order_id' => $orderTemp->id])->save()) {
+                return false;
+            }
+
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 更新客户陈列费
+     *
+     * @param $salesmanVisitOrders
+     */
+    private function _updateDisplay($salesmanVisitOrders)
+    {
+        foreach ($salesmanVisitOrders as $salesmanVisitOrder) {
+            $displayList = $salesmanVisitOrder->displayList;
+
+            if (is_null($displayList)) {
+                continue;
+            }
+            $salesmanCustomer = $salesmanVisitOrder->salesmanCustomer;
+            foreach ($displayList as $item) {
+                $displaySurplus = $salesmanCustomer->displaySurplus()->where([
+                    'month' => $item->month,
+                    'mortgage_goods_id' => $item->mortgage_goods_id
+                ])->first();
+
+                if ($displaySurplus) {
+                    $displaySurplus->decrement('surplus', $item->used);
+                } else {
+                    if ($item->mortgage_goods_id == 0) {
+                        //陈列费
+                        $salesmanCustomer->displaySurplus()->create([
+                            'month' => $item->month,
+                            'mortgage_goods_id' => 0,
+                            'surplus' => bcsub($salesmanCustomer->display_fee, $item->used)
+                        ]);
+                    } else {
+                        //抵费商品
+                        $surplus = $salesmanCustomer->mortgageGoods()->find($item->mortgage_goods_id);
+
+                        if ($surplus) {
+                            $salesmanCustomer->displaySurplus()->create([
+                                'month' => $item->month,
+                                'mortgage_goods_id' => $item->mortgage_goods_id,
+                                'surplus' => bcsub($surplus->pivot->total, $item->used)
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

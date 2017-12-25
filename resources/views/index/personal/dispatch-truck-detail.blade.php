@@ -28,8 +28,11 @@
                                             <th>发车单号</th>
                                             <th>车辆名称</th>
                                             <th>车牌号</th>
-                                            <th>配送人</th>
-                                            <th>配送订单数</th>
+                                            <th>司机</th>
+                                            @if($dispatchTruck->type == cons('dispatch_truck.type.sales'))
+                                                <th>业务员</th>
+                                            @endif
+                                            <th>配送单数</th>
                                             <th>已收金额</th>
                                             <th>未收金额</th>
                                             <th>状态</th>
@@ -38,10 +41,13 @@
                                         <tbody>
                                         <tr>
                                             <td>{{$dispatchTruck->id}}</td>
-                                            <td>{{$dispatchTruck->truck->name}}</td>
-                                            <td>{{$dispatchTruck->truck->license_plate}}</td>
+                                            <td>{{$dispatchTruck->truck->name or ''}}</td>
+                                            <td>{{$dispatchTruck->truck->license_plate or ''}}</td>
                                             <td>{!! implode("|",array_column($dispatchTruck->deliveryMans->toArray(), 'name')) !!}</td>
-                                            <td>{{$dispatchTruck->orders()->where('status','<',cons('order.status.invalid'))->count()}}</td>
+                                            @if($dispatchTruck->type == cons('dispatch_truck.type.sales'))
+                                                <th>{{$dispatchTruck->salesman_name}}</th>
+                                            @endif
+                                            <td>{{$dispatchTruck->orderCount or ''}}</td>
                                             <td>{{$dispatchTruck->alreadyPaidAmount}}</td>
                                             <td>{{$dispatchTruck->unpaidAmount}}</td>
                                             <td>{{$dispatchTruck->status_name}}</td>
@@ -71,17 +77,17 @@
                                         </thead>
                                         <tbody>
                                         @foreach($dispatchTruck->orders as $order)
-                                            @if($order->status < cons('order.status.invalid'))
+
                                                 <tr>
-                                                    <td>{{$order->id}}</td>
+                                                    <td>{{$order->id}}@if($order->status == cons('order.status.invalid'))(已作废)@endif</td>
                                                     <td>{{$order->price}}</td>
                                                     <td>{{$order->pay_type_name}}</td>
-                                                    <td>{{$order->user_shop_name}}</td>
+                                                    <td>{{$order->user_shop_name or ''}}</td>
                                                     <td>{{$order->user_contact}}</td>
                                                     <td>{{$order->user_contact_info ?? ''}}</td>
-                                                    <td>{{($order->user_shop_address ?? $order->business_address_name) ?? ''}}</td>
+                                                    <td>{{($order->user_shop_address->area_name ?? $order->user_shipping_address_name) ?? ''}}</td>
                                                 </tr>
-                                            @endif
+
                                         @endforeach
                                         </tbody>
                                     </table>
@@ -150,8 +156,7 @@
                                                     </td>
                                                     <td width="50%">
                                                         <div class="product-panel">
-                                                            <a class="product-name"
-                                                               href="">{{$goods_statis['name']}}</a>
+                                                            {{$goods_statis['name']}}
                                                         </div>
                                                     </td>
                                                     <td>{{$goods_statis['quantity']}}</td>
@@ -163,15 +168,55 @@
                                 </div>
                             </div>
                         @endif
+
+                        @if($dispatchTruck->truckSalesGoods && $dispatchTruck->truckSalesGoods->sum('pivot.surplus'))
+                            <div class="col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">剩余商品总计</h3>
+                                    </div>
+                                    <div class="panel-container table-responsive">
+                                        <table class="table table-bordered table-th-color table-center">
+                                            <thead>
+                                            <tr>
+                                                <th>商品编号</th>
+                                                <th>商品图片</th>
+                                                <th>商品名称</th>
+                                                <th>剩余数量</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($dispatchTruck->truckSalesGoods as $sales_goods)
+                                                @if($sales_goods->pivot->surplus)
+                                                    <tr>
+                                                        <td>{{$sales_goods->id}}</td>
+                                                        <td><img class="store-img"
+                                                                 src="{{$sales_goods->img_url}}">
+                                                        </td>
+                                                        <td width="50%">
+                                                            <div class="product-panel">
+                                                                {{$sales_goods->name}}
+                                                            </div>
+                                                        </td>
+                                                        <td>{{$sales_goods->surplus_string}}</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div class="col-sm-12">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">发车单记录</h3>
+                                    <h3 class="panel-title">操作记录</h3>
                                 </div>
                                 <div class="panel-container table-responsive">
                                     <table class="table table-bordered table-center">
                                         <tr>
-                                            <th>发车单操作</th>
+                                            <th>操作</th>
                                             <th>操作时间</th>
                                             <th>操作人</th>
                                         </tr>

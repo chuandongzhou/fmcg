@@ -626,7 +626,7 @@ class Order extends Model
     public function getUserShopAddressAttribute()
     {
         if ($this->user_id > 0) {
-            return $this->user ? $this->user->shop->shopAddress->area_name : (new AddressData());
+            return $this->user ? $this->user->shop->shopAddress : (new AddressData());
         } elseif ($this->salesmanVisitOrder) {
             return $this->salesmanVisitOrder->business_address;
         }

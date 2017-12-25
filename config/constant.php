@@ -122,7 +122,8 @@ return [
         'type' => [
             'platform' => 0,            //平台
             'business' => 1,            //业务
-            'dispatch_truck' => 2,            //车销
+            'dispatch_truck' => 2,       //车销
+            'replace' => 3,            //代下
         ],
         'is_cancel' => [ //订单是否被取消，默认是未取消
             'off' => 0,
@@ -621,8 +622,8 @@ return [
         //订单
         'order' => [
             'sync' => [
-                'pay_type' => 2,
-                'pay_way' => 1,
+                'pay_type' => 2,    //默认货到付款
+                'pay_way' => 1,     //现金或者pos机
             ],
             'status' => [
                 'not_pass' => 0,

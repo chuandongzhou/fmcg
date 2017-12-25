@@ -21,6 +21,7 @@ class DeliveryService
         $goods = [];
         $deliveryMan = [];
         $orderGoodsTypes = cons('order.goods.type');
+        //dd($delivery[6]->salesmanVisitOrder->customer_type);
         foreach ($delivery as $order) {
             $orderDelivery = empty($deliveryManId) ? '' : $order->dispatchTruck->deliveryMans->count();
             foreach ($order->orderGoods as $orderGoods) {
@@ -64,11 +65,9 @@ class DeliveryService
 
                 }
             }
-
         }
         ksort($goods);
         return ['goods' => $goods, 'deliveryMan' => $deliveryMan];
-
     }
 
     /**

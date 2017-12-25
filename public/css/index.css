@@ -7554,7 +7554,7 @@ table .product-panel .promotions {
 .salesman-goods-table tr th input[type='text'],
 .salesman-goods-table .table-list-row .shopping-table-list table tr td input[type='text'],
 .table-list-row .shopping-table-list table .salesman-goods-table tr td input[type='text'] {
-  width: 100%;
+  width: 100% !important;
   border: none;
   outline: none;
   background-color: #e0e0e0;
@@ -7857,8 +7857,28 @@ table .product-panel .promotions {
   color: #fff;
 }
 
+.warehousing-table table tbody tr td .new-col {
+  position: relative;
+  max-width: 100px;
+  margin: auto;
+}
+
 .warehousing-table table tbody tr td .number {
   width: 75px;
+  padding: 0 5px;
+}
+
+.warehousing-table table tbody tr td .tips {
+  display: none;
+  position: absolute;
+  background-color: #e0e0e0;
+  white-space: nowrap;
+  left: 7px;
+  padding: 0 5px;
+  line-height: 30px;
+  font-size: 12px;
+  z-index: 99;
+  border-radius: 4px !important;
 }
 
 .warehousing-table table tbody tr td textarea {
@@ -8544,3 +8564,60 @@ table tr:hover .warning-edit-icon {
 }
 
 /*==============app下载end=================*/
+
+.table-border-none thead tr td,
+.table-border-none thead tr th,
+.table-border-none thead .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list table .table-border-none thead tr td,
+.table-border-none tbody tr td {
+  border-left: none;
+  border-right: none;
+}
+
+.instead-order .warehousing-table table tr td:first-of-type {
+  text-align: center !important;
+}
+
+.instead-order .order-notes {
+  height: 35px;
+  border-radius: 4px !important;
+  padding: 0 7px;
+  border: 1px solid #b4b4b4;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.instead-order-modal table {
+  width: 766px;
+}
+
+.instead-order-modal table tr td:nth-of-type(1),
+.instead-order-modal table tr th:nth-of-type(1),
+.instead-order-modal .table-list-row .shopping-table-list table tr td:nth-of-type(1),
+.table-list-row .shopping-table-list .instead-order-modal table tr td:nth-of-type(1) {
+  width: 30% !important;
+}
+
+.instead-order-modal table tr td:nth-of-type(2),
+.instead-order-modal table tr th:nth-of-type(2),
+.instead-order-modal .table-list-row .shopping-table-list table tr td:nth-of-type(2),
+.table-list-row .shopping-table-list .instead-order-modal table tr td:nth-of-type(2) {
+  width: 60% !important;
+}
+
+.instead-order-modal table tr td:nth-of-type(3),
+.instead-order-modal table tr th:nth-of-type(3),
+.instead-order-modal .table-list-row .shopping-table-list table tr td:nth-of-type(3),
+.table-list-row .shopping-table-list .instead-order-modal table tr td:nth-of-type(3) {
+  width: 10% !important;
+}
+
+.modal .new-col .tips {
+  left: inherit;
+  border: 1px solid #fff;
+  right: 0 !important;
+}
+
+.modal .table tbody tr td:first-of-type {
+  text-align: center !important;
+}

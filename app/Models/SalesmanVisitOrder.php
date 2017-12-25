@@ -372,7 +372,7 @@ class SalesmanVisitOrder extends Model
     }
 
     /**
-     * 获取客户地址
+     * 获取客户商铺地址
      *
      * @return string
      */
@@ -454,7 +454,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCustomerTypeAttribute()
     {
-        return $this->salesmanCustomer ? $this->salesmanCustomer->type : 1;
+        return $this->salesmanCustomer ? ($this->salesmanCustomer->type > 1 ? $this->salesmanCustomer->type : 1) : 1;
     }
 
     /**

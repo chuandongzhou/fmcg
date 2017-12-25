@@ -3222,7 +3222,6 @@ table {
     cursor: pointer;
   }
   .modal {
-
     .modal .address-select {
       width: 30%;
       display: inline;
@@ -6527,7 +6526,7 @@ table {
         width: 15% !important;
       }
       input[type='text'] {
-        width: 100%;
+        width: 100%!important;
         border: none;
         outline: none;
         background-color: $gray-plain-light;
@@ -6778,8 +6777,26 @@ table {
               color: $body-bg;
             }
           }
+          .new-col{
+            position:relative;
+            max-width:100px;
+            margin:auto;
+          }
           .number{
             width:75px;
+            padding:0 5px;
+          }
+          .tips{
+            display: none;
+            position:absolute;
+            background-color:$gray-plain-light;
+            white-space:nowrap;
+            left:7px;
+            padding:0 5px;
+            line-height: 30px;
+            font-size: 12px;
+            z-index: 99;
+            border-radius:4px!important;
           }
           textarea{
             height:55px;
@@ -7379,3 +7396,64 @@ table tr:hover .warning-edit-icon {
   }
 }
 /*==============app下载end=================*/
+.table-border-none{
+ thead tr td,thead tr th,tbody tr td{
+   border-left: none;
+   border-right: none;
+ }
+}
+.instead-order{
+  .warehousing-table{
+    table{
+      tr{
+        td:first-of-type{
+          text-align: center !important;
+        }
+      }
+    }
+  }
+  .order-notes{
+    height:35px;
+    border-radius:4px!important;
+    padding:0 7px;
+    border:1px solid $gray-lighter;
+    width:100%;
+    margin-top: 15px;
+  }
+}
+.instead-order-modal{
+  table{
+    width: 766px;
+    tr{
+      td,th{
+        &:nth-of-type(1) {
+          width: 30% !important;
+        }
+        &:nth-of-type(2) {
+          width: 60% !important;
+        }
+        &:nth-of-type(3) {
+          width: 10% !important;
+        }
+      }
+    }
+  }
+}
+.modal{
+  .new-col{
+    .tips{
+      left:inherit;
+      border:1px solid $body-bg;
+      right:0!important;
+    }
+  }
+  .table {
+    tbody {
+      tr {
+        td:first-of-type {
+          text-align: center !important;
+        }
+      }
+    }
+  }
+}
