@@ -169,7 +169,7 @@
                                                     <p>
                                                         <a class="btn btn-danger refund" data-target="#refund"
                                                            data-toggle="modal"
-                                                           data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                                           data-url="{{ url('V1' . $order->id) }}">
                                                             退款
                                                         </a>
                                                     </p>

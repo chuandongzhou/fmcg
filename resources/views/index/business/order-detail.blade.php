@@ -1,5 +1,5 @@
 @extends('index.manage-master')
-@include('includes.salesman-order-change', ['giftUrl' => url('api/v1/business/order/gift'), 'url' => url('api/v1/business/order/change')])
+@include('includes.salesman-order-change', ['giftUrl' => url('V1'), 'url' => url('V1')])
 @include('includes.shipping-address-map')
 @section('subtitle')
     业务管理-{{ $order->type == cons('salesman.order.type.order') ? '订货单' : '退货单' }}
@@ -268,7 +268,7 @@
                                                            onclick="editText('commodity-num{{ $key.$goods['id'] }}')">
                                                             <i class="iconfont icon-xiugai "></i>编辑</a>
                                                         <a class="red delete-no-form" data-method="delete"
-                                                           data-url="{{ url('api/v1/business/order/mortgage-goods-delete') }}"
+                                                           data-url="{{ url('V1') }}"
                                                            data-data='{"order_id":{{ $order->id }}, "mortgage_goods_id" : {{ $goods['id'] }}}'><i
                                                                     class="iconfont icon-shanchu"></i>删除</a>
                                                     </td>

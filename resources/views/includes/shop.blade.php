@@ -101,7 +101,7 @@
             @if(!$shop->license)
                 <span data-name="business_license" class="btn upload-img fileinput-button">
                                 请选择图片文件
-                                <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
+                                <input type="file" accept="image/*" data-url="{{ url('V1') }}"
                                        name="file">
                             </span>
             @endif

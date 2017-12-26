@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-sm-12 item-wrap">
                             <form class="form-horizontal ajax-form"
-                                  action="{{ url('api/v1/child-user/model/signature') }}"
+                                  action="{{ url('V1') }}"
                                   method="post"
                                   data-help-class="col-sm-push-2 col-sm-10"
                                   data-done-url="{{ url('child-user/model/model-edit') }}"

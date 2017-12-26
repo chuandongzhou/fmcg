@@ -7857,12 +7857,6 @@ table .product-panel .promotions {
   color: #fff;
 }
 
-.warehousing-table table tbody tr td .new-col {
-  position: relative;
-  max-width: 100px;
-  margin: auto;
-}
-
 .warehousing-table table tbody tr td .number {
   width: 75px;
   padding: 0 5px;
@@ -7898,6 +7892,12 @@ table .product-panel .promotions {
   white-space: nowrap;
   overflow: hidden;
   color: #555555;
+}
+
+.instead-order .warehousing-table .new-col {
+  position: relative;
+  max-width: 100px;
+  margin: auto;
 }
 
 .warehousing-control-search {
@@ -8620,4 +8620,8 @@ table tr:hover .warning-edit-icon {
 
 .modal .table tbody tr td:first-of-type {
   text-align: center !important;
+}
+
+.display-date {
+  margin-bottom: 15px;
 }

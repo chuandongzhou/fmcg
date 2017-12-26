@@ -6736,6 +6736,7 @@ table {
     font-weight: 600;
   }
 }
+
 .warehousing-table{
   table{
     tbody {
@@ -6777,11 +6778,6 @@ table {
               color: $body-bg;
             }
           }
-          .new-col{
-            position:relative;
-            max-width:100px;
-            margin:auto;
-          }
           .number{
             width:75px;
             padding:0 5px;
@@ -6816,6 +6812,15 @@ table {
     white-space: nowrap;
     overflow: hidden;
     color: $gray
+  }
+}
+.instead-order {
+  .warehousing-table {
+    .new-col {
+      position: relative;
+      max-width: 100px;
+      margin: auto;
+    }
   }
 }
 .warehousing-control-search {
@@ -7456,4 +7461,8 @@ table tr:hover .warning-edit-icon {
       }
     }
   }
+}
+
+.display-date{
+  margin-bottom:15px;
 }

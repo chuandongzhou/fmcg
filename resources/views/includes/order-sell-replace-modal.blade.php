@@ -566,12 +566,12 @@
                                     id = self.data('id'),
                                     img = self.data('img'),
                                     name = self.data('name'),
-                                    pieces = self.data('pieces').split(','),
-                                    pieces_lang = self.data('pieces_lang').split(','),
+                                    pieces = String(self.data('pieces')).split(','),
+
+                                    pieces_lang = String(self.data('pieces_lang')).split(','),
                                     surplus_inventory = self.data('surplus_inventory'),
                                     cost_tips = self.data('cost_tips'),
                                     price_retailer = self.data('price_retailer');
-
 
                             html += '<tr class="goods"><td class="goods_id">' + id + '</td>'
                             html += '<td><img class="store-img" src=' + img + '> <a class="product-name outhousing-product-name" href="javascript:;">' + name + '</a></td>'
@@ -621,15 +621,6 @@
                             html += '<td><a class="red goods-delete">删除</a></td></tr>';
                         });
 
-                        /*displayGoodsParentsContainer.each(function () {
-                            if ($(this).find('span.display-goods-date').html() == displayDate) {
-                                $(this).find('span.display-goods-date').html(displayDate);
-                                $(this).find('.display-goods-container').append(html);
-                            }else{
-                                $(this).append()
-                            }
-                            $(this).find('.display-goods-container').show();
-                        });*/
                         displayGoodsParentsContainer.find('.display-goods-container').append(html);
                         displayGoodsParentsContainer.find('.display-goods-container').show();
                         displayContainer.removeClass('hidden');
@@ -702,7 +693,7 @@
             /**
              * 价格计算
              */
-            function statistics() {
+            function  statistics() {
                 var goodsTotal = 0,
                         displayFeeTotal = 0;
                 $('tr.goods').each(function () {

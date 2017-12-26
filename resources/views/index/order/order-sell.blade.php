@@ -210,7 +210,7 @@
                     @if(\Request::is('order-sell') && $orders->count() )
                         <div class="col-sm-12" id="foot-nav">
                             <input type="checkbox" class="parent">全选
-                            <button class="btn btn-red ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
+                            <button class="btn btn-red ajax" data-url="{{ url('V1') }}"
                                     data-method="put">批量取消
                             </button>
                             <a class="btn btn-primary batch-send" data-target="#sendModal" data-toggle="modal">批量发货</a>

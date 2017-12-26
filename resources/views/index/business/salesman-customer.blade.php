@@ -20,7 +20,7 @@
             <div class="row salesman">
                 <div class="col-sm-12 create">
                     <form class="form-horizontal ajax-form"
-                          action="{{ url('api/v1/business/salesman-customer/' . $salesmanCustomer->id) }}"
+                          action="{{ url('V1' . $salesmanCustomer->id) }}"
                           method="{{ $salesmanCustomer->id ? 'put' : 'post' }}"
                           data-help-class="col-sm-push-2 col-sm-10"
                           data-done-url="{{ url('business/salesman-customer') . (is_null($customerType) ? '' : '?type=supplier')}}"

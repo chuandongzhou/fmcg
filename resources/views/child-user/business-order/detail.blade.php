@@ -1,5 +1,5 @@
 @extends('child-user.manage-master')
-@include('includes.salesman-order-change', ['giftUrl' => url('api/v1/child-user/business-order/gift'), 'url' => url('api/v1/child-user/business-order/change')])
+@include('includes.salesman-order-change', ['giftUrl' => url('V1'), 'url' => url('V1')])
 @include('includes.shipping-address-map')
 @section('subtitle')
     业务管理-{{ $order->type == cons('salesman.order.type.order') ? '订货单' : '退货单' }}

@@ -150,7 +150,7 @@
                             <div class="col-sm-12 statistics text-right">
                                 <p>商品总额: <b class="red goods-total">￥0.00</b></p>
                                 <p><input type="hidden" name="amount"></p>
-                                {{--<p>陈列费: <b class="red display-fee">-￥0.00</b></p>--}}
+                                <p>陈列费: <b class="red display-fee">-￥0.00</b></p>
                                 <p>订单应付金额: <b class="red total_amount">￥0.00</b></p>
                                 <p>
                                     <button id="form-submit" type="submit" class="btn btn-primary">提交订单</button>
