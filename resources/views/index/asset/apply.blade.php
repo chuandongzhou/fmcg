@@ -65,7 +65,7 @@
                                         <a class="color-blue" href="{{url('asset/apply-detail/'.$apply->id)}}">
                                             <i class="iconfont icon-chakan"></i>查看</a>
                                         @if($apply->status == cons('asset_apply.status.not_audit'))
-                                            <a data-url="{{ url('api/v1/asset/apply/review/'.$apply->id) }}"
+                                            <a data-url="{{ url('V1'.$apply->id) }}"
                                                data-method="put"
                                                data-data='{"status" : "{{cons('asset_apply.status.approved')}}"}'
                                                class="ajax">

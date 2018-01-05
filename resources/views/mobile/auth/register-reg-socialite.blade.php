@@ -11,7 +11,7 @@
             <div class="col-xs-10 color-black">注册</div>
         </div>
     </div>
-    <form class="mobile-ajax-form form-horizontal" action="{{ url('api/v1/auth/bind-socialite') }}"
+    <form class="mobile-ajax-form form-horizontal" action="{{ url('V1') }}"
           data-done-url="{{ url('auth/reg-success') }}" method="post" accept-charset="UTF-8">
         <div class="container reg-container">
             <div class="row edit-wrap">
@@ -96,7 +96,7 @@
                         <span class="control-label">营业执照</span>
                         <div class="update-img pull-right image-upload">
                             <a href="javascript:;">
-                                <input type="file" data-url="{{ url('api/v1/file/upload-temp') }}" name="file"
+                                <input type="file" data-url="{{ url('V1') }}" name="file"
                                        accept="images/*" data-name="license">
                             </a>
                             <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>

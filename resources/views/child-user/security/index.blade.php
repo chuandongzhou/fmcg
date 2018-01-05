@@ -12,7 +12,7 @@
                 </div>
             </div>
             <form class="form-horizontal ajax-form" method="put"
-                  action="{{ url('api/v1/child-user/security') }}" data-help-class="col-sm-push-2 col-sm-10"
+                  action="{{ url('V1') }}" data-help-class="col-sm-push-2 col-sm-10"
                   autocomplete="off">
                 <div class="col-sm-9 user-show">
                     <div class="form-group">

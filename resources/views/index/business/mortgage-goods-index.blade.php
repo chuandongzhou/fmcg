@@ -62,7 +62,7 @@
                                                        data-pieces="{{ $goods->pieces }}"><i class="fa fa-edit"></i> 编辑
                                                     </a>
                                                     <a href="javascript:" data-method="put"
-                                                       data-url="{{ url('api/v1/business/mortgage-goods/' . $goods->id . '/status') }}"
+                                                       data-url="{{ url('V1' . $goods->id . '/status') }}"
                                                        data-status="{{ $goods->status }}"
                                                        data-on='<i class="fa  fa-check"></i> 启用'
                                                        data-off='<i class="fa  fa-minus-circle"></i> 禁用'

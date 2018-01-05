@@ -82,7 +82,7 @@ class SalesmanController extends Controller
     {
         $salesmen = child_auth()->user()->shop->salesmen()->active()->get();
 
-        $actionUrl = url('api/v1/child-user/salesman/target-set');
+        $actionUrl = url('api/V1/child-user/salesman/target-set');
 
         return view('index.business.salesman-target-set', compact('salesmen', 'actionUrl'));
     }

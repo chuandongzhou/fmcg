@@ -25,7 +25,7 @@
                 <div class="row register">
                     <div class="col-xs-8">
                         <form class="ajax-form form-horizontal" method="post"
-                              action="{{  url('api/v1/auth/register-user')  }}"
+                              action="{{  url('V1')  }}"
                               data-done-url="{{ url('auth/register-set-password') }}"
                               accept-charset="UTF-8"
                               autocomplete="off">

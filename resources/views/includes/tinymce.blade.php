@@ -35,7 +35,7 @@
                 language: "zh_CN",
                 convert_urls: false,
                 file_picker_callback: function (callback, value, meta) {
-                    var upload = $('<input type="file" name="file" data-url="' + "{{ url('api/v1/file/upload-temp') }}" + '" multiple>'),
+                    var upload = $('<input type="file" name="file" data-url="' + "{{ url('V1') }}" + '" multiple>'),
                             self = $(tinymce.activeEditor.getContainer());
 
                     if (meta.filetype == 'file') {

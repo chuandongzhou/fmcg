@@ -66,7 +66,7 @@
                                     <td>
 
                                         <div role="group" class="btn-group btn-group-xs">
-                                            <a data-url="{{ url('api/v1/personal/coupon/'. $coupon->id) }}"
+                                            <a data-url="{{ url('V1'. $coupon->id) }}"
                                                data-method="delete"
                                                class="red ajax" type="button">
                                                 <i class="fa fa-trash-o"></i> 删除

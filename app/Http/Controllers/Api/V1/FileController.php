@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * 文件上传接口
  *
- * @package App\Http\Controllers\Api\v1
+ * @package App\Http\Controllers\Api\V1
  */
 class FileController extends Controller
 {

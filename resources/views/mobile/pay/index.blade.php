@@ -17,7 +17,7 @@
 
 @section('body')
     @parent
-    <form class="mobile-ajax-form" method="get" action="{{ url('api/v1/pay/charge/' . $order->id) }}">
+    <form class="mobile-ajax-form" method="get" action="{{ url('V1' . $order->id) }}">
         <div class="container-fluid  m60 p65 pay-wrap">
             <div class="row">
                 <div class="col-xs-12 clearfix item">
