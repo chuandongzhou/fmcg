@@ -106,7 +106,7 @@
                 </table>
                 <div class="business-operating">
                     <label><input type="checkbox" class="parent">全选</label>
-                    <button data-url="{{ url('V1') }}" data-method="put"
+                    <button data-url="{{ url('api/v1/business/order/batch-pass') }}" data-method="put"
                             class="btn btn-primary batch ajax" type="button">
                         <i class="fa fa-check"></i> 批量通过
                     </button>

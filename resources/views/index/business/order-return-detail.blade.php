@@ -1,5 +1,5 @@
 @extends('index.manage-master')
-@include('includes.salesman-order-change', ['giftUrl' => url('V1'), 'url' => url('V1')])
+@include('includes.salesman-order-change', ['giftUrl' => url('api/v1/business/order/gift'), 'url' => url('api/v1/business/order/change')])
 @include('includes.shipping-address-map')
 @section('subtitle')
     业务管理-退货单
@@ -23,7 +23,7 @@
                     <a class="btn go-back btn-border-blue" href="javascript:history.go(-1)">返回</a>
                     @if($order->can_pass)
                         <button
-                                data-url="{{ url('V1' . $order->id) }}"
+                                data-url="{{ url('api/v1/business/order/' . $order->id) }}"
                                 data-method="put" data-data='{"status" : "1"}'
                                 data-done-url="{{ url('business/order/return-orders') }}"
                                 class="btn btn-blue-lighter ajax">通过

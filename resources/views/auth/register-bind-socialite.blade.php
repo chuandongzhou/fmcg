@@ -19,7 +19,7 @@
                         <div class=" msg-tips">Hi,{{ $token['nickname'] }} 欢迎来到订百达 , 完成绑定后可以微信账号一键登录哦~</div>
                     </div>
                     <div class="col-xs-8 col-xs-offset-2">
-                        <form class="ajax-form form-horizontal" action="{{ url('V1') }}" data-done-url="{{ url('auth/reg-success') }}" method="post" accept-charset="UTF-8">
+                        <form class="ajax-form form-horizontal" action="{{ url('api/v1/auth/bind-socialite') }}" data-done-url="{{ url('auth/reg-success') }}" method="post" accept-charset="UTF-8">
                             <fieldset>
                                 <div class="form-group">
                                     <label class="col-xs-3 control-label" for="name"><span class="red">*</span>

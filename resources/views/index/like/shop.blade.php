@@ -49,7 +49,7 @@
                                                            class="child"/>
                                                 </div>
                                                 <div class="remove">
-                                                    <a data-url="{{ url('V1') }}" data-method="put"
+                                                    <a data-url="{{ url('api/v1/like/interests') }}" data-method="put"
                                                        data-data='{"id":{{ $shop->id }}, "type" : "shops","status":0}'
                                                        class="red ajax">
                                                         <i class="iconfont icon-shanchu"></i>

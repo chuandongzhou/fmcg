@@ -71,7 +71,7 @@
                                            class="edit-node">
                                             <i class="iconfont icon-xiugai"></i> 分配权限
                                         </a>
-                                        <a data-url="{{ url('V1'. $user->id) }}"
+                                        <a data-url="{{ url('api/v1/personal/child-user/'. $user->id) }}"
                                            data-method="delete" class="red delete-no-form ajax" href="javascript:"
                                            data-danger="真的要删除吗？"
                                            type="button">

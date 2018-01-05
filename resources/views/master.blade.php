@@ -25,7 +25,7 @@
         var SITE = {
             USER: {!! $user or '{}' !!},
             ROOT: '{{ url('/') }}',
-            API_ROOT: '{{ route('V1') }}'
+            API_ROOT: '{{ route('api.v1.root') }}'
         };
     </script>
     <script src="{{ asset('js/jquery.min.js') }}"></script>

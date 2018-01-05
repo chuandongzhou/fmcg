@@ -11,7 +11,7 @@
             <div class="col-xs-10 color-black">注册</div>
         </div>
     </div>
-    <form class="mobile-ajax-form form-horizontal" action="{{ url('V1') }}"
+    <form class="mobile-ajax-form form-horizontal" action="{{ url('api/v1/auth/bind-socialite') }}"
           data-done-url="{{ url('auth/reg-success') }}" method="post" accept-charset="UTF-8">
         <div class="container reg-container">
             <div class="row edit-wrap">
