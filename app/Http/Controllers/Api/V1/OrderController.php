@@ -126,7 +126,7 @@ class OrderController extends Controller
      */
     public function getNonPayment()
     {
-        $orders = Order::ofBuy(auth()->id())->nonPayment()->with([
+        $orders = Order::ofBuy(auth()->id())->nonPayment()->useful()->with([
             'shop.user',
             'user',
             'coupon',
@@ -146,7 +146,7 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy(auth()->id())->nonArrived()->with([
+        $orders = Order::ofBuy(auth()->id())->nonArrived()->useful()->with([
             'shop.user',
             'user',
             'coupon',
@@ -166,7 +166,7 @@ class OrderController extends Controller
      */
     public function getWaitConfirmByUser()
     {
-        $orders = Order::ofBuy(auth()->id())->WaitConfirm()->with([
+        $orders = Order::ofBuy(auth()->id())->waitConfirm()->useful()->with([
             'shop.user',
             'user',
             'coupon',
@@ -186,7 +186,7 @@ class OrderController extends Controller
     public function getWaitConfirmBySeller()
     {
         $orders = Order::ofSell(auth()->user()->shop_id)->with('user.shop', 'goods', 'coupon',
-            'shop.user', 'orderReason')->WaitConfirm()->paginate();
+            'shop.user', 'orderReason')->waitConfirm()->useful()->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
@@ -427,8 +427,6 @@ class OrderController extends Controller
 
             $redisVal = '订单:' . $order->id . cons()->lang('push_msg.cancel_by_' . $msg);
             (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
-
-
         }
 
         return $this->success(['failOrderIds' => $failOrderIds]);

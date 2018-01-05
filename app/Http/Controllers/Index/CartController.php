@@ -14,7 +14,7 @@ class CartController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('forbid:supplier,wholesaler,retailer');
+        $this->middleware('forbid:maker');
     }
 
     public function index()

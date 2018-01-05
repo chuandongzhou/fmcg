@@ -548,9 +548,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-    //, addButton = $('#add-address')
+        //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-    //, addLimit = 500   //最大地址限制
+        //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -1176,9 +1176,9 @@ var initMap = function () {
 function timeIntervalFunc(options) {
     var count = options.count || 60, i = count, delay = options.delay || 1000,
         doneCallback = options.done || function () {
-            },
+        },
         tickCallback = options.tick || function () {
-            };
+        };
 
     var timer = setInterval(function () {
         // 继续
@@ -1338,15 +1338,17 @@ var setAddressCookie = function () {
  */
 var visibleSelect = function () {
     $('.visible-select').on('change', function () {
-        var obj = $(this), val = obj.val(), visibleItemSelector = '.visible-item-' + val;
-        $('.visible-item').not(visibleItemSelector).each(function () {
+        var obj = $(this), group = obj.data('group') || 'item', val = obj.val(),
+            visibleItemSelector = '.visible-' + group + '-' + val;
+
+        $('.visible-' + group).not(visibleItemSelector).each(function () {
             $(this).addClass('hidden').find('input , select').prop('disabled', true);
         });
         $(visibleItemSelector).each(function () {
             $(this).removeClass('hidden').find('input , select').prop('disabled', false);
         })
     }).trigger('change');
-}
+};
 
 /**
  * 固定table宽度
@@ -1357,7 +1359,7 @@ var visibleSelect = function () {
  * @constructor
  */
 var FixTable = function (TableID, FixColumnNumber, width, height) {
-    if ($("." + TableID + "_tableLayout").length != 0) {
+    if ($("." + TableID + '_tableLayout').length != 0) {
         $("." + TableID + "_tableLayout").before($("." + TableID));
         $("." + TableID + "_tableLayout").empty();
     }

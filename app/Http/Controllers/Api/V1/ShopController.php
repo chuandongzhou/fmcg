@@ -36,11 +36,10 @@ class ShopController extends Controller
      */
     public function allShops(Request $request)
     {
-
         $xLng = $request->input('x_lng', 0);  //经度
         $yLat = $request->input('y_lat', 0);  //纬度
 
-        $type = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
+        $type = auth()->check() ? auth()->user()->type : cons('user.type.retailer');
         $addressData = (new AddressService())->getAddressData();
         $data = array_except($addressData, 'address_name');
 
@@ -51,7 +50,7 @@ class ShopController extends Controller
             ->with('logo', 'shopAddress', 'user')
             ->OfUser($type)->OfDeliveryArea($data)->OfName($request->input('name'))->orderBy('distance')->paginate();
         $shops->each(function ($item) {
-            $recommendGoods = $item->recommendGoods()->limit(3)->get();
+            $recommendGoods = $item->recommendGoods()->active()->limit(3)->get();
             $recommendGoodsCount = $recommendGoods->count();
             $item->three_goods = $recommendGoodsCount == 0 ? $item->goods()->active()->ofNew()->limit(3)->get() : $recommendGoods;
             $item->setAppends(['goods_count', 'sales_volume', 'logo_url'])->setHidden(['goods']);
