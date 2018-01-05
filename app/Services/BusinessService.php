@@ -632,7 +632,7 @@ class BusinessService extends BaseService
                     }
                 }
                 if (!$flag) {
-                    $this->setError('抵费商品不存在'.$item['id']);
+                    $this->setError('抵费商品不存在');
                     return false;
                 }
             }

@@ -61,8 +61,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 warehousing-table">
-                                <div class="goods panel hidden panel-default">
+                            <div class="col-sm-12 hidden warehousing-table">
+                                <div class="goods panel panel-default">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">商品</h3>
                                     </div>
@@ -82,13 +82,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 warehousing-table">
-                                <div class="panel display hidden panel-default">
+                            <div class="col-sm-12 hidden warehousing-table">
+                                <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">陈列</h3>
                                     </div>
                                     <div class="panel-container table-responsive">
-                                        <div class="display-goods-parents-container">
+                                        <div>
                                             <span class="display-goods-date"></span>
                                             <table class="table display-goods-container table-bordered table-th-color table-center">
                                                 <thead>
@@ -115,8 +115,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 warehousing-table">
-                                <div class="gifts panel hidden panel-default">
+                            <div class="col-sm-12 hidden warehousing-table">
+                                <div class="gifts panel panel-default">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">赠品</h3>
                                     </div>
@@ -150,7 +150,7 @@
                             <div class="col-sm-12 statistics text-right">
                                 <p>商品总额: <b class="red goods-total">￥0.00</b></p>
                                 <p><input type="hidden" name="amount"></p>
-                                {{--<p>陈列费: <b class="red display-fee">-￥0.00</b></p>--}}
+                                <p>陈列费: <b class="red display-fee">-￥0.00</b></p>
                                 <p>订单应付金额: <b class="red total_amount">￥0.00</b></p>
                                 <p>
                                     <button id="form-submit" type="submit" class="btn btn-primary">提交订单</button>
@@ -168,9 +168,6 @@
     <script type="text/javascript">
         $(function () {
             tdTips();
-            $("body").on("click", ".modal table tr", function () {
-                $(this).children("td").children("input[type='radio']").prop("checked", true);
-            });
             $('.display-goods-container .display-fee-container').hide();
 
         })
